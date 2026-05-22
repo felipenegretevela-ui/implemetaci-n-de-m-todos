@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Automata Syntax Highlight
 
 Este proyecto lee un archivo `input.txt` que contiene la definición de un autómata finito determinista, analiza su estructura, construye internamente el autómata, valida cadenas de prueba y genera una salida visual en HTML.
@@ -47,3 +48,7 @@ proyecto/
     ├── automata-highlight.html
     ├── dfa.dot
     └── dfa.png
+=======
+# implemetaci-n-de-m-todos
+Proyecto de Racket para tokenizar, construir autómatas, validar cadenas y generar HTML.
+>>>>>>> de47c65db521000f99741a315a7583969212dc62
