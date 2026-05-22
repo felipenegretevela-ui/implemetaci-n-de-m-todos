@@ -20,7 +20,7 @@
       (car pila)))
 
 (define (simular-pda cadena)
-  (define chars (map string cadena))
+  (define chars (map string (string->list cadena)))
 
   (define (procesar lista estado pila)
     (cond
