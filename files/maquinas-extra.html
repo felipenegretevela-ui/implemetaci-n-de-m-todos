@@ -27,14 +27,14 @@ bb -> rejected
 a -> rejected
 b -> rejected
 aab -> rejected
- -> rejected
+epsilon -> rejected
 </pre>
 <h2>2. Máquina de Turing - Cambia 1 por X</h2>
 <pre>Maquina de Turing: cambia todos los 1 por X
 1 -> X
 11 -> XX
 111 -> XXX
- -> 
+epsilon -> epsilon
 1111 -> XXXX
 </pre>
 <h2>3. LBA - Autómata linealmente acotado para a^n b^n c^n</h2>
@@ -46,7 +46,7 @@ aabbc -> rejected
 abbcc -> rejected
 aaabbbcc -> rejected
 abcc -> rejected
- -> rejected
+epsilon -> rejected
 </pre>
 <h2>4. AFD extra - Número impar de 0's y número impar de 1's</h2>
 <pre>AFD: reconoce cadenas con numero impar de 0's y numero impar de 1's
@@ -58,7 +58,7 @@ abcc -> rejected
 1 -> rejected
 00 -> rejected
 11 -> rejected
- -> rejected
+epsilon -> rejected
 101 -> rejected
 </pre>
 </body>
