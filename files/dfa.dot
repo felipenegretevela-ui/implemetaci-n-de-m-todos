@@ -6,27 +6,13 @@ digraph G {
   qi [shape=point, width=0];
   "q0" [shape=circle, style=filled, fillcolor="#E3F2FD", color="#1E88E5", penwidth=2.5, fontname="Helvetica-Bold"];
   "q1" [shape=circle, style=filled, fillcolor="#F5F5F5", color="#757575", penwidth=1.5, fontname="Helvetica"];
-  "q2" [shape=doublecircle, style=filled, fillcolor="#DDF7E3", color="#4E9F3D", penwidth=2, fontname="Helvetica"];
-  "q3" [shape=circle, style=filled, fillcolor="#F5F5F5", color="#757575", penwidth=1.5, fontname="Helvetica"];
-  "q4" [shape=doublecircle, style=filled, fillcolor="#DDF7E3", color="#4E9F3D", penwidth=2, fontname="Helvetica"];
-  "q5" [shape=circle, style=filled, fillcolor="#F5F5F5", color="#757575", penwidth=1.5, fontname="Helvetica"];
-  "q6" [shape=circle, style=filled, fillcolor="#F5F5F5", color="#757575", penwidth=1.5, fontname="Helvetica"];
-  "q7" [shape=doublecircle, style=filled, fillcolor="#DDF7E3", color="#4E9F3D", penwidth=2, fontname="Helvetica"];
+  "q2" [shape=circle, style=filled, fillcolor="#F5F5F5", color="#757575", penwidth=1.5, fontname="Helvetica"];
+  "q3" [shape=doublecircle, style=filled, fillcolor="#DDF7E3", color="#4E9F3D", penwidth=2, fontname="Helvetica"];
 
   qi -> "q0" [color="#1E88E5", penwidth=1.5];
-  "q7" -> "q7" [label="  9, 8, 1, 0, 3, 2, 5, 4, 7, 6 ", fontname="Helvetica", fontsize=10, color="#555555", penwidth=1.2];
-  "q0" -> "q1" [label="  +, - ", fontname="Helvetica", fontsize=10, color="#555555", penwidth=1.2];
-  "q6" -> "q7" [label="  9, 8, 1, 0, 3, 2, 5, 4, 7, 6 ", fontname="Helvetica", fontsize=10, color="#555555", penwidth=1.2];
-  "q2" -> "q4" [label="  . ", fontname="Helvetica", fontsize=10, color="#555555", penwidth=1.2];
-  "q2" -> "q5" [label="  e, E ", fontname="Helvetica", fontsize=10, color="#555555", penwidth=1.2];
-  "q2" -> "q2" [label="  5, 9, 8, 1, 0, 3, 2, 4, 7, 6 ", fontname="Helvetica", fontsize=10, color="#555555", penwidth=1.2];
-  "q0" -> "q3" [label="  . ", fontname="Helvetica", fontsize=10, color="#555555", penwidth=1.2];
-  "q0" -> "q2" [label="  9, 8, 1, 0, 3, 2, 5, 4, 7, 6 ", fontname="Helvetica", fontsize=10, color="#555555", penwidth=1.2];
-  "q1" -> "q3" [label="  . ", fontname="Helvetica", fontsize=10, color="#555555", penwidth=1.2];
-  "q1" -> "q2" [label="  9, 8, 1, 0, 3, 2, 5, 4, 7, 6 ", fontname="Helvetica", fontsize=10, color="#555555", penwidth=1.2];
-  "q4" -> "q5" [label="  e, E ", fontname="Helvetica", fontsize=10, color="#555555", penwidth=1.2];
-  "q4" -> "q4" [label="  5, 9, 8, 1, 0, 3, 2, 4, 7, 6 ", fontname="Helvetica", fontsize=10, color="#555555", penwidth=1.2];
-  "q3" -> "q4" [label="  9, 8, 1, 0, 3, 2, 5, 4, 7, 6 ", fontname="Helvetica", fontsize=10, color="#555555", penwidth=1.2];
-  "q5" -> "q6" [label="  +, - ", fontname="Helvetica", fontsize=10, color="#555555", penwidth=1.2];
-  "q5" -> "q7" [label="  9, 8, 1, 0, 3, 2, 5, 4, 7, 6 ", fontname="Helvetica", fontsize=10, color="#555555", penwidth=1.2];
+  "q0" -> "q1" [label="  y, x, a ", fontname="Helvetica", fontsize=10, color="#555555", penwidth=1.2];
+  "q2" -> "q3" [label="  9, 8, 1, 0, 3, 2, 5, 4, 7, 6 ", fontname="Helvetica", fontsize=10, color="#555555", penwidth=1.2];
+  "q1" -> "q2" [label="  - ", fontname="Helvetica", fontsize=10, color="#555555", penwidth=1.2];
+  "q3" -> "q3" [label="  9, 8, 1, 0, 3, 2, 5, 4, 7, 6 ", fontname="Helvetica", fontsize=10, color="#555555", penwidth=1.2];
+  "q1" -> "q1" [label="  y, x, a ", fontname="Helvetica", fontsize=10, color="#555555", penwidth=1.2];
 }
