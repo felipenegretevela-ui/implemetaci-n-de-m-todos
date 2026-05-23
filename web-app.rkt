@@ -1,10 +1,8 @@
 #lang racket
 
-
 (require web-server/servlet)
-(require racket/runtime-path)
 (require web-server/servlet-env)
-
+(require racket/runtime-path)
 
 (require "config.rkt")
 (require "lexer.rkt")
@@ -12,13 +10,13 @@
 (require "validator.rkt")
 (require "graphviz.rkt")
 (require "html-generator.rkt")
+(require "system-utils.rkt")
 
 ;-----------RUTAS DEL PROYECTO PARA LA WEB------------------
 (define-runtime-path project-dir ".")
 (define web-files-dir (build-path project-dir "files"))
 (define web-output-dot (path->string (build-path web-files-dir "web-dfa.dot")))
 (define web-output-png (path->string (build-path web-files-dir "web-dfa.png")))
-
 
 ;-----------HTML DEL FORMULARIO INICIAL------------------
 (define form-html
@@ -80,57 +78,54 @@ EOS
 ;-----------PUNTO DE ENTRADA DEL SERVIDOR------------------
 (define (start request)
   (define bindings (request-bindings request))
-  
+
   (if (exists-binding? 'codigo bindings)
-      
+
       ; --- FLUJO FELIZ DIRECTO ---
       (let* ([codigo-crudo (extract-binding/single 'codigo bindings)]
-             
-             ;Limpiamos retornos
+
+             ; Limpiamos retornos
              [codigo-texto (string-replace codigo-crudo "\r\n" "\n")]
-             
-             ;Tokenizador léxico
+
+             ; Tokenizador léxico
              [tokens (tokenizer codigo-texto tokens-table)]
-             
-             ;Parser por descenso recursivo
+
+             ; Parser por descenso recursivo
              [automaton (parse-start tokens)]
-             
-             ;Simulador de autómata
+
+             ; Simulador de autómata
              [validations (validate-checks automaton)]
-             
-             ;Generamos el HTML con el resaltado de colores
+
+             ; Generamos el HTML con el resaltado de colores
              [html-texto (build-full-html tokens validations)]
-             
-             ;Limpiamos las etiquetas de cierre para poder incrustar la visualización
-             [html-abierto (string-replace 
+
+             ; Limpiamos las etiquetas de cierre y cambiamos
+             ; la imagen para no sobrescribir dfa.png del main
+             [html-abierto (string-replace
                             (string-replace
-                              (string-replace html-texto "</html>" "")
-                              "</body>" "")
-                              "dfa.png"
-                              "web-dfa.png")]
-             
-             ;Operaciones de archivos
-             [_ (ensure-output-folder)]
-             [web-output-dot "files/web-dfa.dot"]
-             [web-output-png "files/web-dfa.png"]
+                             (string-replace html-texto "</html>" "")
+                             "</body>" "")
+                            "dfa.png"
+                            "web-dfa.png")]
+
+             ; Operaciones de archivos
+             [_ (make-directory* web-files-dir)]
              [_ (generate-graphviz automaton web-output-dot web-output-png)])
-        
-        ;Fusionamos todo en el diseño web final limpio
+
+        ; Fusionamos todo en el diseño web final limpio
         (define html-final
           (string-append
-           html-abierto 
+           html-abierto
            "<div style='white-space: normal; margin-top: 40px; border-top: 1px solid #333; padding-top: 25px; font-family: sans-serif; text-align: center;'>"
            "  <a href='/' style='color: #121212; background-color: #ffffff; text-decoration:none; padding: 12px 24px; border-radius: 4px; font-weight: bold; display: inline-block; box-shadow: 0 2px 5px rgba(0,0,0,0.3); transition: background 0.2s;'>"
            "    Volver al Editor"
            "  </a>"
            "</div>"
            "</body>"
-           "</html>"
-           )
-        )
-        
+           "</html>"))
+
         (enviar-html html-final))
-      
+
       ; Formulario inicial
       (enviar-html form-html)))
 
@@ -141,5 +136,5 @@ EOS
                #:servlet-path "/"
                #:listen-ip "127.0.0.1"
                #:port 8080
-               #:extra-files-paths (list (build-path (current-directory) "files"))
+               #:extra-files-paths (list web-files-dir)
                #:command-line? #t)
