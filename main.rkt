@@ -19,39 +19,59 @@
 (define tokens
   (tokenizer input tokens-table))
 
-;-----------OBTENER SOLO EL PRIMER AUTOMATA-------------------
-(define (tokens-primer-automata tokens)
-  (define (aux restantes ya-vio-states? acumulado)
+;-----------OBTENER EL N-ESIMO AUTOMATA-------------------
+(define (tokens-automata-n tokens n)
+
+  (define (cerrar-bloque bloques actual)
+    (if (empty? actual)
+        bloques
+        (append bloques (list (reverse actual)))))
+
+  (define (separar-bloques restantes bloques actual dentro?)
     (cond
       [(empty? restantes)
-       (reverse acumulado)]
+       (cerrar-bloque bloques actual)]
 
       [else
-       (define token-actual
-         (car restantes))
-
-       (define tipo-token
-         (first token-actual))
+       (define token-actual (car restantes))
+       (define tipo-token (first token-actual))
 
        (cond
-         [(and ya-vio-states?
-               (equal? tipo-token "kw-states"))
-          (reverse acumulado)]
-
          [(equal? tipo-token "kw-states")
-          (aux (cdr restantes)
-               #t
-               (cons token-actual acumulado))]
+          (if dentro?
+              (separar-bloques
+               (cdr restantes)
+               (append bloques (list (reverse actual)))
+               (list token-actual)
+               #t)
+              (separar-bloques
+               (cdr restantes)
+               bloques
+               (list token-actual)
+               #t))]
+
+         [dentro?
+          (separar-bloques
+           (cdr restantes)
+           bloques
+           (cons token-actual actual)
+           #t)]
 
          [else
-          (aux (cdr restantes)
-               ya-vio-states?
-               (cons token-actual acumulado))])]))
+          (separar-bloques
+           (cdr restantes)
+           bloques
+           actual
+           #f)])]))
 
-  (aux tokens #f '()))
+  (define bloques
+    (separar-bloques tokens '() '() #f))
 
+  (list-ref bloques (- n 1)))
+
+;-----------SELECCIONAR AUTOMATA PRINCIPAL-------------------
 (define tokens-principal
-  (tokens-primer-automata tokens))
+  (tokens-automata-n tokens 2))
 
 ;-----------PARSEAR Y CONSTRUIR AUTOMATA-------------------
 (define automaton
