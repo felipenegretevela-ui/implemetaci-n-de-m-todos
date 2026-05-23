@@ -18,17 +18,19 @@ a { color:#9ADAFB; }
 <p><a href='automata-highlight.html'>Ver autómata principal generado</a></p>
 <h2>1. PDA - Autómata con pila para a^n b^n</h2>
 <pre>PDA: reconoce a^n b^n
-ab -> accepted
-aabb -> accepted
-aaabbb -> accepted
+ab -> rejected
+aabb -> rejected
+aaabbb -> rejected
+aaaabbbb -> rejected
+aaab -> rejected
+bb -> rejected
+a -> rejected
+b -> rejected
 aab -> rejected
-abb -> rejected
-ba -> rejected
  -> rejected
-aaabb -> rejected
 </pre>
 <h2>2. Máquina de Turing - Cambia 1 por X</h2>
-<pre>Máquina de Turing: cambia todos los 1 por X
+<pre>Maquina de Turing: cambia todos los 1 por X
 1 -> X
 11 -> XX
 111 -> XXX
