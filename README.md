@@ -47,6 +47,7 @@ Además del autómata principal, se agregaron máquinas extra vistas durante el 
 5. **AFD extra**  
    Se encuentra en `maquinas-extra/afd-impar-0-1.rkt`. Reconoce cadenas binarias con número impar de `0` y número impar de `1`.
 
+```md
 Los resultados de las máquinas extra se muestran en:
 
 ```text
