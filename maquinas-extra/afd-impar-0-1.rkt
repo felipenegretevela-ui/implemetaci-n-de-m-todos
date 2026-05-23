@@ -1,56 +1,85 @@
 #lang racket
 
-; AFD para reconocer cadenas binarias con número impar de 0's
-; y número impar de 1's
+;----------------------------------------------------------
+; AFD extra
+; Reconoce cadenas binarias con numero impar de 0's
+; y numero impar de 1's
+;----------------------------------------------------------
 
+;-----------PRUEBAS-------------------
 (define pruebas
-  '("01" "10" "0011" "0101" "0" "1" "00" "11" "" "101"))
+  '("01" "10" "0011" "0101"
+    "0" "1" "00" "11" "" "101"))
 
+;-----------AUTOMATA EN HASH-------------------
+(define afd
+  (hash
+   "q00" (hash
+          "0" "q10"
+          "1" "q01")
+
+   "q10" (hash
+          "0" "q00"
+          "1" "q11")
+
+   "q01" (hash
+          "0" "q11"
+          "1" "q00")
+
+   "q11" (hash
+          "0" "q01"
+          "1" "q10")))
+
+(define start-state "q00")
+(define accept-states '("q11"))
+
+;-----------CONVERTIR CADENA A LISTA-------------------
 (define (string->chars cadena)
   (map string (string->list cadena)))
 
-(define (siguiente-estado estado simbolo)
+;-----------OBTENER SIGUIENTE ESTADO-------------------
+(define (get-next auto current symbol)
   (cond
-    [(and (equal? estado "q00") (equal? simbolo "0")) "q10"]
-    [(and (equal? estado "q00") (equal? simbolo "1")) "q01"]
+    [(not (hash-has-key? auto current)) #f]
+    [else
+     (let ([transitions (hash-ref auto current)])
+       (cond
+         [(hash-has-key? transitions symbol)
+          (hash-ref transitions symbol)]
+         [else #f]))]))
 
-    [(and (equal? estado "q10") (equal? simbolo "0")) "q00"]
-    [(and (equal? estado "q10") (equal? simbolo "1")) "q11"]
+;-----------SIMULAR AFD-------------------
+(define (validate-afd cadena)
 
-    [(and (equal? estado "q01") (equal? simbolo "0")) "q11"]
-    [(and (equal? estado "q01") (equal? simbolo "1")) "q00"]
+  (define simbolos
+    (string->chars cadena))
 
-    [(and (equal? estado "q11") (equal? simbolo "0")) "q01"]
-    [(and (equal? estado "q11") (equal? simbolo "1")) "q10"]
-
-    [else "error"]))
-
-(define (simular-afd cadena)
-  (define chars (string->chars cadena))
-
-  (define (procesar lista estado)
+  (define (procesar lista current)
     (cond
       [(empty? lista)
-       (equal? estado "q11")]
+       (member current accept-states)]
 
       [else
-       (define simbolo (car lista))
-       (define nuevo-estado (siguiente-estado estado simbolo))
+       (let* ([symbol (car lista)]
+              [resto (cdr lista)]
+              [next (get-next afd current symbol)])
+         (cond
+           [next
+            (procesar resto next)]
+           [else #f]))]))
 
-       (if (equal? nuevo-estado "error")
-           #f
-           (procesar (cdr lista) nuevo-estado))]))
+  (procesar simbolos start-state))
 
-  (procesar chars "q00"))
-
+;-----------MOSTRAR RESULTADOS-------------------
 (define (mostrar-resultado cadena)
   (displayln
    (string-append
     cadena
     " -> "
-    (if (simular-afd cadena)
+    (if (validate-afd cadena)
         "accepted"
         "rejected"))))
 
+;-----------EJECUCION-------------------
 (displayln "AFD: reconoce cadenas con numero impar de 0's y numero impar de 1's")
 (for-each mostrar-resultado pruebas)
