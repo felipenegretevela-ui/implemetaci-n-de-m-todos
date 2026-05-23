@@ -36,16 +36,16 @@ Además del autómata principal, se agregaron máquinas extra vistas durante el 
    Se encuentra integrado en `input.txt` y se muestra en `files/automata-highlight.html`. Este autómata reconoce cadenas binarias que terminan en `01`.
 
 2. **PDA - Autómata con pila**  
-   Se encuentra en `maquinas-extra/pda-anbn.rkt`. Reconoce el lenguaje `a^n b^n`, usando una pila para comparar la cantidad de `a` con la cantidad de `b`.
+   Se encuentra en `maquinas-extra/pda.rkt`. Reconoce el lenguaje `a^n b^n`, usando una pila para comparar la cantidad de `a` con la cantidad de `b`.
 
 3. **Máquina de Turing**  
-   Se encuentra en `maquinas-extra/turing-cambia-unos.rkt`. Simula una cinta y una cabeza lectora. El ejemplo implementado cambia todos los símbolos `1` por `X`.
+   Se encuentra en `maquinas-extra/turing.rkt`. Simula una cinta y una cabeza lectora. El ejemplo implementado cambia todos los símbolos `1` por `X`.
 
 4. **LBA - Autómata linealmente acotado**  
-   Se encuentra en `maquinas-extra/lba-anbncn.rkt`. Reconoce el lenguaje `a^n b^n c^n`, usando una cinta limitada al tamaño de la entrada.
+   Se encuentra en `maquinas-extra/lba.rkt`. Reconoce el lenguaje `a^n b^n c^n`, usando una cinta limitada al tamaño de la entrada.
 
 5. **AFD extra**  
-   Se encuentra en `maquinas-extra/afd-impar-0-1.rkt`. Reconoce cadenas binarias con número impar de `0` y número impar de `1`.
+   Se encuentra en `maquinas-extra/dfa.rkt`. Reconoce cadenas binarias con número impar de `0` y número impar de `1`.
 
 ```md
 Los resultados de las máquinas extra se muestran en:
@@ -70,10 +70,10 @@ proyecto/
 ├── .gitignore
 │
 ├── maquinas-extra/
-│   ├── pda-anbn.rkt
-│   ├── turing-cambia-unos.rkt
-│   ├── lba-anbncn.rkt
-│   ├── afd-impar-0-1.rkt
+│   ├── pda.rkt
+│   ├── turing.rkt
+│   ├── lba.rkt
+│   ├── dfa.rkt
 │   └── generar-html-maquinas-extra.rkt
 │
 └── files/
