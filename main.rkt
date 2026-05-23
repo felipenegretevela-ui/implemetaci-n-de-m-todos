@@ -19,27 +19,53 @@
 (define tokens
   (tokenizer input tokens-table))
 
+;-----------OBTENER SOLO EL PRIMER AUTOMATA-------------------
+(define (tokens-primer-automata tokens)
+  (define (aux restantes ya-vio-states? acumulado)
+    (cond
+      [(empty? restantes)
+       (reverse acumulado)]
+
+      [else
+       (define token-actual
+         (car restantes))
+
+       (define tipo-token
+         (first token-actual))
+
+       (cond
+         [(and ya-vio-states?
+               (equal? tipo-token "kw-states"))
+          (reverse acumulado)]
+
+         [(equal? tipo-token "kw-states")
+          (aux (cdr restantes)
+               #t
+               (cons token-actual acumulado))]
+
+         [else
+          (aux (cdr restantes)
+               ya-vio-states?
+               (cons token-actual acumulado))])]))
+
+  (aux tokens #f '()))
+
+(define tokens-principal
+  (tokens-primer-automata tokens))
+
 ;-----------PARSEAR Y CONSTRUIR AUTOMATA-------------------
 (define automaton
-  (parse-start tokens))
+  (parse-start tokens-principal))
 
 ;-----------VALIDAR CHECKS-------------------
 (define validations
   (validate-checks automaton))
 
 ;-----------GENERAR GRAFO CON GRAPHVIZ-------------------
-(displayln "Antes de generar Graphviz")
-(displayln output-dot)
-(displayln output-png)
-
 (generate-graphviz automaton output-dot output-png)
 
-(displayln "Despues de generar Graphviz")
-(displayln (file-exists? output-dot))
-(displayln (file-exists? output-png))
-
 ;-----------GENERAR HTML-------------------
-(write-html-file output-html tokens validations)
+(write-html-file output-html tokens-principal validations)
 
 ;-----------CONFIRMACION EN CONSOLA-------------------
 (displayln "Archivo creado: files/automata-highlight.html")
