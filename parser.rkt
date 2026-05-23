@@ -79,10 +79,10 @@ Para el parser nada mas cambie la variable string por text
   (define auto
     (second result))
 
-  (when (not (empty? remaining))
+  (when (not (empty? tokens-restantes))
   (displayln "Aviso: hay tokens sobrantes despues del primer automata."))
 
-  automaton
+  auto)
 
 ;----------PARSE AUTOMATON----------------
 (define (parse-automaton tokens auto)
