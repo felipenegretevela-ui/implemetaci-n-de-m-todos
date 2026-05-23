@@ -2,6 +2,7 @@
 
 
 (require web-server/servlet)
+(require racket/runtime-path)
 (require web-server/servlet-env)
 
 
@@ -11,6 +12,13 @@
 (require "validator.rkt")
 (require "graphviz.rkt")
 (require "html-generator.rkt")
+
+;-----------RUTAS DEL PROYECTO PARA LA WEB------------------
+(define-runtime-path project-dir ".")
+(define web-files-dir (build-path project-dir "files"))
+(define web-output-dot (path->string (build-path web-files-dir "web-dfa.dot")))
+(define web-output-png (path->string (build-path web-files-dir "web-dfa.png")))
+
 
 ;-----------HTML DEL FORMULARIO INICIAL------------------
 (define form-html
