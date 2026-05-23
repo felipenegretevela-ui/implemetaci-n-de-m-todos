@@ -70,15 +70,22 @@
 
   (procesar simbolos start-state))
 
+;-----------MOSTRAR CADENA-------------------
+(define (mostrar-cadena cadena)
+  (if (equal? cadena "")
+      "epsilon"
+      cadena))
+
 ;-----------MOSTRAR RESULTADOS-------------------
 (define (mostrar-resultado cadena)
   (displayln
    (string-append
-    cadena
+    (mostrar-cadena cadena)
     " -> "
     (if (validate-afd cadena)
         "accepted"
         "rejected"))))
+        
 
 ;-----------EJECUCION-------------------
 (displayln "AFD: reconoce cadenas con numero impar de 0's y numero impar de 1's")

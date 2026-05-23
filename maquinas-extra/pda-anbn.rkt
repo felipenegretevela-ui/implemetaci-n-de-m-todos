@@ -101,16 +101,22 @@
 
   (procesar start-state simbolos '()))
 
+;-----------MOSTRAR CADENA-------------------
+(define (mostrar-cadena cadena)
+  (if (equal? cadena "")
+      "epsilon"
+      cadena))
+
 ;-----------MOSTRAR RESULTADOS-------------------
 (define (mostrar-resultado cadena)
   (displayln
    (string-append
-    cadena
+    (mostrar-cadena cadena)
     " -> "
     (if (validate-pda cadena)
         "accepted"
         "rejected"))))
-
+        
 ;-----------EJECUCION-------------------
 (displayln "PDA: reconoce a^n b^n")
 (for-each mostrar-resultado pruebas)

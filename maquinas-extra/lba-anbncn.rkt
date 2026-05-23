@@ -91,15 +91,22 @@
                         [else
                          (loop (replace-at tape2 pos-c "Z"))]))]))]))]))]))
 
+;-----------MOSTRAR CADENA-------------------
+(define (mostrar-cadena cadena)
+  (if (equal? cadena "")
+      "epsilon"
+      cadena))
+
 ;-----------MOSTRAR RESULTADOS-------------------
 (define (mostrar-resultado cadena)
   (displayln
    (string-append
-    cadena
+    (mostrar-cadena cadena)
     " -> "
     (if (validate-lba cadena)
         "accepted"
         "rejected"))))
+        
 
 ;-----------EJECUCION-------------------
 (displayln "LBA: reconoce a^n b^n c^n")

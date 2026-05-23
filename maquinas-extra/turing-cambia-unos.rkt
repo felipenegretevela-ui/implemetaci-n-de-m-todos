@@ -94,13 +94,26 @@
      (not (equal? x blanco)))
    tape))
 
+;-----------MOSTRAR CADENA-------------------
+(define (mostrar-cadena cadena)
+  (if (equal? cadena "")
+      "epsilon"
+      cadena))
+
 ;-----------MOSTRAR RESULTADOS-------------------
 (define (mostrar-resultado cadena)
   (let* ([resultado-tape (validate-turing cadena)]
          [resultado-limpio (limpiar-blanco resultado-tape)]
-         [resultado-texto (apply string-append resultado-limpio)])
+         [resultado-texto (apply string-append resultado-limpio)]
+         [resultado-mostrado (if (equal? resultado-texto "")
+                                 "epsilon"
+                                 resultado-texto)])
     (displayln
-     (string-append cadena " -> " resultado-texto))))
+     (string-append
+      (mostrar-cadena cadena)
+      " -> "
+      resultado-mostrado))))
+      
 
 ;-----------EJECUCION-------------------
 (displayln "Maquina de Turing: cambia todos los 1 por X")
