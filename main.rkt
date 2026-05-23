@@ -28,7 +28,15 @@
   (validate-checks automaton))
 
 ;-----------GENERAR GRAFO CON GRAPHVIZ-------------------
+(displayln "Antes de generar Graphviz")
+(displayln output-dot)
+(displayln output-png)
+
 (generate-graphviz automaton output-dot output-png)
+
+(displayln "Despues de generar Graphviz")
+(displayln (file-exists? output-dot))
+(displayln (file-exists? output-png))
 
 ;-----------GENERAR HTML-------------------
 (write-html-file output-html tokens validations)
