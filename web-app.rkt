@@ -95,12 +95,17 @@ EOS
              
              ;Limpiamos las etiquetas de cierre para poder incrustar la visualización
              [html-abierto (string-replace 
-                            (string-replace html-texto "</html>" "")
-                            "</body>" "")]
+                            (string-replace
+                              (string-replace html-texto "</html>" "")
+                              "</body>" "")
+                              "dfa.png"
+                              "web-dfa.png")]
              
              ;Operaciones de archivos
              [_ (ensure-output-folder)]
-             [_ (generate-graphviz automaton output-dot output-png)])
+             [web-output-dot "files/web-dfa.dot"]
+             [web-output-png "files/web-dfa.png"]
+             [_ (generate-graphviz automaton web-output-dot web-output-png)])
         
         ;Fusionamos todo en el diseño web final limpio
         (define html-final
