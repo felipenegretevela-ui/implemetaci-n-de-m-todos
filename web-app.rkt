@@ -15,8 +15,8 @@
 ;-----------RUTAS DEL PROYECTO PARA LA WEB------------------
 (define-runtime-path project-dir ".")
 (define web-files-dir (build-path project-dir "files"))
-(define web-output-dot (path->string (build-path web-files-dir "web-dfa.dot")))
-(define web-output-png (path->string (build-path web-files-dir "web-dfa.png")))
+(define web-output-dot (build-path web-files-dir "web-dfa.dot"))
+(define web-output-png (build-path web-files-dir "web-dfa.png"))
 
 ;-----------HTML DEL FORMULARIO INICIAL------------------
 (define form-html
