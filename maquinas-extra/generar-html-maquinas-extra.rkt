@@ -2,10 +2,10 @@
 
 (require racket/runtime-path)
 
-(define-runtime-path pda-file "pda-anbn.rkt")
-(define-runtime-path turing-file "turing-cambia-unos.rkt")
-(define-runtime-path lba-file "lba-anbncn.rkt")
-(define-runtime-path afd-file "afd-impar-0-1.rkt")
+(define-runtime-path pda-file "pda.rkt")
+(define-runtime-path turing-file "turing.rkt")
+(define-runtime-path lba-file "lba.rkt")
+(define-runtime-path afd-file "dfa.rkt")
 (define-runtime-path output-file "../files/maquinas-extra.html")
 
 (define (run-machine path)
