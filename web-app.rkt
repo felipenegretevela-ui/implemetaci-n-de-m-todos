@@ -27,19 +27,126 @@
   <meta charset='UTF-8'>
   <title>Automata Web Studio</title>
   <style>
-    body { font-family: 'Segoe UI', -apple-system, sans-serif; background-color: #121212; color: #E0E0E0; padding: 40px; max-width: 900px; margin: 0 auto; }
-    h1 { color: #ffffff; font-weight: 300; letter-spacing: 1px; }
-    p { color: #A0A0A0; font-size: 15px; }
-    textarea { width: 100%; height: 380px; background-color: #1E1E1E; color: #ffffff; border: 1px solid #3A3A3A; padding: 15px; font-family: 'Fira Code', 'Courier New', monospace; font-size: 14px; border-radius: 6px; box-sizing: border-box; line-height: 1.5; }
-    textarea:focus { outline: none; border-color: #ffffff; }
-    button { background-color: #ffffff; color: #000000; border: none; padding: 12px 24px; font-size: 16px; cursor: pointer; margin-top: 15px; border-radius: 4px; font-family: inherit; font-weight: bold; transition: background 0.2s; }
-    button:hover { background-color: #747171; }
-    .footer { margin-top: 30px; font-size: 12px; color: #555; text-align: center; }
+    body {
+      font-family: 'Segoe UI', -apple-system, sans-serif;
+      background-color: #121212;
+      color: #E0E0E0;
+      padding: 40px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      color: #ffffff;
+      font-weight: 300;
+      letter-spacing: 1px;
+    }
+
+    h2 {
+      color: #ffffff;
+      font-weight: 300;
+      margin-top: 40px;
+    }
+
+    h3 {
+      color: #9ADAFB;
+      margin-top: 0;
+    }
+
+    p {
+      color: #A0A0A0;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    textarea {
+      width: 100%;
+      height: 380px;
+      background-color: #1E1E1E;
+      color: #ffffff;
+      border: 1px solid #3A3A3A;
+      padding: 15px;
+      font-family: 'Fira Code', 'Courier New', monospace;
+      font-size: 14px;
+      border-radius: 6px;
+      box-sizing: border-box;
+      line-height: 1.5;
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: #ffffff;
+    }
+
+    button {
+      background-color: #ffffff;
+      color: #000000;
+      border: none;
+      padding: 12px 24px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 15px;
+      border-radius: 4px;
+      font-family: inherit;
+      font-weight: bold;
+      transition: background 0.2s;
+    }
+
+    button:hover {
+      background-color: #747171;
+    }
+
+    .extra-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .extra-card {
+      background: #1E1E1E;
+      border: 1px solid #333;
+      padding: 18px;
+      border-radius: 8px;
+    }
+
+    .extra-card p {
+      margin: 8px 0;
+    }
+
+    .extra-button {
+      color: #000;
+      background: #fff;
+      padding: 12px 24px;
+      border-radius: 4px;
+      text-decoration: none;
+      font-weight: bold;
+      display: inline-block;
+      margin-top: 25px;
+    }
+
+    .extra-button:hover {
+      background-color: #747171;
+    }
+
+    hr {
+      border: 1px solid #333;
+      margin: 40px 0;
+    }
+
+    .footer {
+      margin-top: 30px;
+      font-size: 12px;
+      color: #555;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
   <h1>Automata DFA y NFA</h1>
+
   <p>Edita el automata con la sintaxis que se muestra en el cuadro de texto.</p>
+
   <form method='POST' action='/'>
     <textarea name='codigo'>states = q0, q1, q2;
 
@@ -62,6 +169,53 @@ check = "0101";</textarea>
     <br>
     <button type='submit'>Analizar Automata</button>
   </form>
+
+  <hr>
+
+  <h2>Máquinas extra implementadas</h2>
+
+  <p>
+    Además del analizador principal DFA/NFA, el proyecto incluye máquinas extra vistas en clase.
+    Cada máquina extra tiene su propio archivo en Racket, sus pruebas, su descripción del lenguaje
+    y su gráfico generado con Graphviz.
+  </p>
+
+  <div class='extra-grid'>
+
+    <div class='extra-card'>
+      <h3>DFA</h3>
+      <p><b>Tipo:</b> Autómata finito determinista.</p>
+      <p><b>Lenguaje:</b> cadenas binarias con número impar de 0's y número impar de 1's.</p>
+      <p><b>Archivo:</b> maquinas-extra/dfa.rkt</p>
+    </div>
+
+    <div class='extra-card'>
+      <h3>PDA</h3>
+      <p><b>Tipo:</b> Autómata con pila.</p>
+      <p><b>Lenguaje:</b> L = { a^n b^n | n >= 1 }.</p>
+      <p><b>Archivo:</b> maquinas-extra/pda.rkt</p>
+    </div>
+
+    <div class='extra-card'>
+      <h3>LBA</h3>
+      <p><b>Tipo:</b> Autómata linealmente acotado.</p>
+      <p><b>Lenguaje:</b> L = { a^n b^n c^n | n >= 1 }.</p>
+      <p><b>Archivo:</b> maquinas-extra/lba.rkt</p>
+    </div>
+
+    <div class='extra-card'>
+      <h3>Máquina de Turing</h3>
+      <p><b>Tipo:</b> Máquina de Turing.</p>
+      <p><b>Función:</b> transforma todos los símbolos 1 en X.</p>
+      <p><b>Archivo:</b> maquinas-extra/turing.rkt</p>
+    </div>
+
+  </div>
+
+  <a href='/maquinas-extra.html' class='extra-button'>
+    Ver resultados y gráficos de máquinas extra
+  </a>
+
 </body>
 </html>
 EOS
@@ -77,56 +231,71 @@ EOS
 
 ;-----------PUNTO DE ENTRADA DEL SERVIDOR------------------
 (define (start request)
-  (define bindings (request-bindings request))
+  (define bindings
+    (request-bindings request))
 
   (if (exists-binding? 'codigo bindings)
 
-      ; --- FLUJO FELIZ DIRECTO ---
-      (let* ([codigo-crudo (extract-binding/single 'codigo bindings)]
+      ;-----------FLUJO CUANDO SE ANALIZA UN AUTOMATA------------------
+      (let* ([codigo-crudo
+              (extract-binding/single 'codigo bindings)]
 
-             ; Limpiamos retornos
-             [codigo-texto (string-replace codigo-crudo "\r\n" "\n")]
+             ; Limpiamos retornos de Windows
+             [codigo-texto
+              (string-replace codigo-crudo "\r\n" "\n")]
 
              ; Tokenizador léxico
-             [tokens (tokenizer codigo-texto tokens-table)]
+             [tokens
+              (tokenizer codigo-texto tokens-table)]
 
              ; Parser por descenso recursivo
-             [automaton (parse-start tokens)]
+             [automaton
+              (parse-start tokens)]
 
              ; Simulador de autómata
-             [validations (validate-checks automaton)]
+             [validations
+              (validate-checks automaton)]
 
              ; Generamos el HTML con el resaltado de colores
-             [html-texto (build-full-html tokens validations)]
+             [html-texto
+              (build-full-html tokens validations)]
 
              ; Limpiamos las etiquetas de cierre y cambiamos
              ; la imagen para no sobrescribir dfa.png del main
-             [html-abierto (string-replace
-                            (string-replace
-                             (string-replace html-texto "</html>" "")
-                             "</body>" "")
-                            "dfa.png"
-                            "web-dfa.png")]
+             [html-abierto
+              (string-replace
+               (string-replace
+                (string-replace html-texto "</html>" "")
+                "</body>" "")
+               "dfa.png"
+               "web-dfa.png")]
 
              ; Operaciones de archivos
              [_ (make-directory* web-files-dir)]
              [_ (generate-graphviz automaton web-output-dot web-output-png)])
 
-        ; Fusionamos todo en el diseño web final limpio
+        ; Fusionamos todo en el diseño web final
         (define html-final
           (string-append
            html-abierto
+
            "<div style='white-space: normal; margin-top: 40px; border-top: 1px solid #333; padding-top: 25px; font-family: sans-serif; text-align: center;'>"
+
            "  <a href='/' style='color: #121212; background-color: #ffffff; text-decoration:none; padding: 12px 24px; border-radius: 4px; font-weight: bold; display: inline-block; box-shadow: 0 2px 5px rgba(0,0,0,0.3); transition: background 0.2s;'>"
            "    Volver al Editor"
            "  </a>"
+
+           "  <a href='/maquinas-extra.html' style='color: #121212; background-color: #ffffff; text-decoration:none; padding: 12px 24px; border-radius: 4px; font-weight: bold; display: inline-block; margin-left: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.3); transition: background 0.2s;'>"
+           "    Ver máquinas extra"
+           "  </a>"
+
            "</div>"
            "</body>"
            "</html>"))
 
         (enviar-html html-final))
 
-      ; Formulario inicial
+      ;-----------FORMULARIO INICIAL------------------
       (enviar-html form-html)))
 
 ;-----------INICIAR EL SERVIDOR WEB LOCAL------------------
