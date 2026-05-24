@@ -5,17 +5,24 @@
 <meta name='viewport' content='width=device-width, initial-scale=1.0'>
 <title>Máquinas Extra</title>
 <style>
-body { font-family: 'Segoe UI', Arial, sans-serif; background:#1f1f1f; color:#f0f0f0; padding:30px; max-width:1100px; margin:auto; }
+body { font-family: 'Courier New', Courier, monospace; background:#1f1f1f; color:#cbcbcb; padding:30px; max-width:1100px; margin:auto; line-height:1.5; }
 h1 { color:#9ADAFB; }
 h2 { color:#F9D949; margin-top:40px; border-top:1px solid #444; padding-top:25px; }
 h3 { color:#9ADAFB; }
 p { line-height:1.6; color:#dddddd; }
-pre { background:#111; padding:15px; border-radius:8px; color:#7CFFB2; overflow-x:auto; }
+pre { background:#111; padding:15px; border-radius:8px; color:#cbcbcb; overflow-x:auto; white-space:pre-wrap; }
 img { background:#ffffff; padding:15px; border-radius:8px; max-width:95%; margin:15px 0; }
 .card { background:#2b2b2b; border:1px solid #444; padding:20px; border-radius:10px; margin-top:15px; }
 .label { color:#F9D949; font-weight:bold; }
 .syntax-title { color:#9ADAFB; font-weight:bold; margin-top:20px; }
 .syntax { background:#1a1a1a; border:1px solid #444; color:#ffffff; }
+.keyword { color:#A9DAFB; font-weight:bold; }
+.state { color:#679BD1; font-weight:bold; }
+.text { color:#C4947C; }
+.comment { color:#73985D; font-style:italic; }
+.transition { color:#F9D949; }
+.accepted { color:#71C6B1; }
+.rejected { color:#E1544F; }
 a { color:#9ADAFB; }
 </style>
 </head>
@@ -30,40 +37,40 @@ a { color:#9ADAFB; }
 <p><span class='label'>Estructura:</span> usa cuatro estados: q00, q10, q01 y q11. Cada estado representa si la cantidad de 0's y 1's leídos es par o impar.</p>
 <p><span class='label'>Funcionamiento:</span> por cada símbolo leído, el autómata cambia de estado dependiendo de si cambia la paridad de los 0's o de los 1's. Acepta únicamente cuando termina en q11.</p>
 <p class='syntax-title'>Sintaxis / definición de la máquina</p>
-<pre class='syntax'>Estados: q00, q10, q01, q11
-Estado inicial: q00
-Estado final: q11
-Alfabeto: 0, 1
+<pre class='syntax'><span class='keyword'>Estados: q00, q10, q01, q11</span>
+<span class='keyword'>Estado inicial: q00</span>
+<span class='keyword'>Estado final: q11</span>
+<span class='keyword'>Alfabeto: 0, 1</span>
 
-Lenguaje:
+<span class='keyword'>Lenguaje:</span>
 Cadenas binarias con numero impar de 0's y numero impar de 1's.
 
-Transiciones:
-q00 con 0 -> q10
-q00 con 1 -> q01
+<span class='keyword'>Transiciones:</span>
+<span class='transition'>q00 con 0 -&gt; q10</span>
+<span class='transition'>q00 con 1 -&gt; q01</span>
 
-q10 con 0 -> q00
-q10 con 1 -> q11
+<span class='transition'>q10 con 0 -&gt; q00</span>
+<span class='transition'>q10 con 1 -&gt; q11</span>
 
-q01 con 0 -> q11
-q01 con 1 -> q00
+<span class='transition'>q01 con 0 -&gt; q11</span>
+<span class='transition'>q01 con 1 -&gt; q00</span>
 
-q11 con 0 -> q01
-q11 con 1 -> q10</pre>
+<span class='transition'>q11 con 0 -&gt; q01</span>
+<span class='transition'>q11 con 1 -&gt; q10</span></pre>
 <h3>Gráfico</h3>
 <img src='dfa-extra.png' alt='Grafico DFA'>
 <h3>Pruebas</h3>
-<pre>AFD: reconoce cadenas con numero impar de 0's y numero impar de 1's
-01 -> accepted
-10 -> accepted
-0011 -> rejected
-0101 -> rejected
-0 -> rejected
-1 -> rejected
-00 -> rejected
-11 -> rejected
-epsilon -> rejected
-101 -> rejected
+<pre><span class='keyword'>AFD: reconoce cadenas con numero impar de 0's y numero impar de 1's</span>
+<span class='accepted'>01 -&gt; accepted</span>
+<span class='accepted'>10 -&gt; accepted</span>
+<span class='rejected'>0011 -&gt; rejected</span>
+<span class='rejected'>0101 -&gt; rejected</span>
+<span class='rejected'>0 -&gt; rejected</span>
+<span class='rejected'>1 -&gt; rejected</span>
+<span class='rejected'>00 -&gt; rejected</span>
+<span class='rejected'>11 -&gt; rejected</span>
+<span class='rejected'>epsilon -&gt; rejected</span>
+<span class='rejected'>101 -&gt; rejected</span>
 </pre>
 </div>
 <h2>2. PDA - Autómata con Pila</h2>
@@ -73,39 +80,39 @@ epsilon -> rejected
 <p><span class='label'>Estructura:</span> usa estados start, s0, s1 y s2, además de una pila con símbolo base #.</p>
 <p><span class='label'>Funcionamiento:</span> por cada a leída se apila un símbolo. Al comenzar a leer b, la máquina desapila un símbolo por cada b. Si la cantidad coincide y llega al estado final, acepta.</p>
 <p class='syntax-title'>Sintaxis / definición de la máquina</p>
-<pre class='syntax'>Estados: start, s0, s1, s2
-Estado inicial: start
-Estado final: s2
-Alfabeto de entrada: a, b
-Simbolo inicial de pila: #
+<pre class='syntax'><span class='keyword'>Estados: start, s0, s1, s2</span>
+<span class='keyword'>Estado inicial: start</span>
+<span class='keyword'>Estado final: s2</span>
+<span class='keyword'>Alfabeto de entrada: a, b</span>
+<span class='keyword'>Simbolo inicial de pila: #</span>
 
-Lenguaje:
-L = { a^n b^n | n >= 1 }
+<span class='keyword'>Lenguaje:</span>
+L = { a^n b^n | n &gt;= 1 }
 
-Transiciones:
-start, epsilon, epsilon -> s0, #
+<span class='keyword'>Transiciones:</span>
+<span class='transition'>start, epsilon, epsilon -&gt; s0, #</span>
 
-s0, a, # -> s0, a#
-s0, a, a -> s0, aa
+<span class='transition'>s0, a, # -&gt; s0, a#</span>
+<span class='transition'>s0, a, a -&gt; s0, aa</span>
 
-s0, b, a -> s1, epsilon
-s1, b, a -> s1, epsilon
+<span class='transition'>s0, b, a -&gt; s1, epsilon</span>
+<span class='transition'>s1, b, a -&gt; s1, epsilon</span>
 
-s1, epsilon, # -> s2, #</pre>
+<span class='transition'>s1, epsilon, # -&gt; s2, #</span></pre>
 <h3>Gráfico</h3>
 <img src='pda-extra.png' alt='Grafico PDA'>
 <h3>Pruebas</h3>
-<pre>PDA: reconoce a^n b^n
-ab -> rejected
-aabb -> rejected
-aaabbb -> rejected
-aaaabbbb -> rejected
-aaab -> rejected
-bb -> rejected
-a -> rejected
-b -> rejected
-aab -> rejected
-epsilon -> rejected
+<pre><span class='keyword'>PDA: reconoce a^n b^n</span>
+<span class='rejected'>ab -&gt; rejected</span>
+<span class='rejected'>aabb -&gt; rejected</span>
+<span class='rejected'>aaabbb -&gt; rejected</span>
+<span class='rejected'>aaaabbbb -&gt; rejected</span>
+<span class='rejected'>aaab -&gt; rejected</span>
+<span class='rejected'>bb -&gt; rejected</span>
+<span class='rejected'>a -&gt; rejected</span>
+<span class='rejected'>b -&gt; rejected</span>
+<span class='rejected'>aab -&gt; rejected</span>
+<span class='rejected'>epsilon -&gt; rejected</span>
 </pre>
 </div>
 <h2>3. LBA - Autómata Linealmente Acotado</h2>
@@ -115,37 +122,37 @@ epsilon -> rejected
 <p><span class='label'>Estructura:</span> usa una cinta limitada al tamaño de la entrada. Marca a como X, b como Y y c como Z.</p>
 <p><span class='label'>Funcionamiento:</span> busca una a, una b y una c para marcarlas como grupo. Repite el proceso hasta que todos los símbolos estén marcados o hasta encontrar un error.</p>
 <p class='syntax-title'>Sintaxis / definición de la máquina</p>
-<pre class='syntax'>Estados: q0, q1, q2, q3
-Estado inicial: q0
-Estado final: q3
-Cinta limitada: mismo tamano que la entrada
+<pre class='syntax'><span class='keyword'>Estados: q0, q1, q2, q3</span>
+<span class='keyword'>Estado inicial: q0</span>
+<span class='keyword'>Estado final: q3</span>
+<span class='keyword'>Cinta limitada: mismo tamano que la entrada</span>
 
-Lenguaje:
-L = { a^n b^n c^n | n >= 1 }
+<span class='keyword'>Lenguaje:</span>
+L = { a^n b^n c^n | n &gt;= 1 }
 
-Marcas:
-a -> X
-b -> Y
-c -> Z
+<span class='keyword'>Marcas:</span>
+<span class='transition'>a -&gt; X</span>
+<span class='transition'>b -&gt; Y</span>
+<span class='transition'>c -&gt; Z</span>
 
-Funcionamiento:
-1. Busca una a y la marca como X.
-2. Busca una b y la marca como Y.
-3. Busca una c y la marca como Z.
-4. Repite el proceso hasta que todo quede marcado.
-5. Si no encuentra el orden o cantidad correcta, rechaza.</pre>
+<span class='keyword'>Funcionamiento:</span>
+<span class='comment'>1. Busca una a y la marca como X.</span>
+<span class='comment'>2. Busca una b y la marca como Y.</span>
+<span class='comment'>3. Busca una c y la marca como Z.</span>
+<span class='comment'>4. Repite el proceso hasta que todo quede marcado.</span>
+<span class='comment'>5. Si no encuentra el orden o cantidad correcta, rechaza.</span></pre>
 <h3>Gráfico</h3>
 <img src='lba-extra.png' alt='Grafico LBA'>
 <h3>Pruebas</h3>
-<pre>LBA: reconoce a^n b^n c^n
-abc -> accepted
-aabbcc -> accepted
-aaabbbccc -> accepted
-aabbc -> rejected
-abbcc -> rejected
-aaabbbcc -> rejected
-abcc -> rejected
-epsilon -> rejected
+<pre><span class='keyword'>LBA: reconoce a^n b^n c^n</span>
+<span class='accepted'>abc -&gt; accepted</span>
+<span class='accepted'>aabbcc -&gt; accepted</span>
+<span class='accepted'>aaabbbccc -&gt; accepted</span>
+<span class='rejected'>aabbc -&gt; rejected</span>
+<span class='rejected'>abbcc -&gt; rejected</span>
+<span class='rejected'>aaabbbcc -&gt; rejected</span>
+<span class='rejected'>abcc -&gt; rejected</span>
+<span class='rejected'>epsilon -&gt; rejected</span>
 </pre>
 </div>
 <h2>4. Máquina de Turing</h2>
@@ -155,27 +162,27 @@ epsilon -> rejected
 <p><span class='label'>Estructura:</span> usa una cinta, una cabeza de lectura/escritura, un estado inicial q0, un estado final qf y el blanco B.</p>
 <p><span class='label'>Funcionamiento:</span> si lee 1, escribe X y se mueve a la derecha. Si lee B, se detiene en el estado final.</p>
 <p class='syntax-title'>Sintaxis / definición de la máquina</p>
-<pre class='syntax'>Estados: q0, qf
-Estado inicial: q0
-Estado final: qf
-Simbolo blanco: B
-Cinta: entrada + B
+<pre class='syntax'><span class='keyword'>Estados: q0, qf</span>
+<span class='keyword'>Estado inicial: q0</span>
+<span class='keyword'>Estado final: qf</span>
+<span class='keyword'>Simbolo blanco: B</span>
+<span class='keyword'>Cinta: entrada + B</span>
 
-Funcion:
+<span class='keyword'>Funcion:</span>
 Transforma todos los simbolos 1 en X.
 
-Transiciones:
-q0 lee 1 -> escribe X, mueve R, sigue en q0
-q0 lee B -> escribe B, se queda S, pasa a qf</pre>
+<span class='keyword'>Transiciones:</span>
+<span class='transition'>q0 lee 1 -&gt; escribe X, mueve R, sigue en q0</span>
+<span class='transition'>q0 lee B -&gt; escribe B, se queda S, pasa a qf</span></pre>
 <h3>Gráfico</h3>
 <img src='turing-extra.png' alt='Grafico Maquina de Turing'>
 <h3>Pruebas</h3>
-<pre>Maquina de Turing: cambia todos los 1 por X
-1 -> X
-11 -> XX
-111 -> XXX
-epsilon -> epsilon
-1111 -> XXXX
+<pre><span class='keyword'>Maquina de Turing: cambia todos los 1 por X</span>
+<span class='transition'>1 -&gt; X</span>
+<span class='transition'>11 -&gt; XX</span>
+<span class='transition'>111 -&gt; XXX</span>
+<span class='transition'>epsilon -&gt; epsilon</span>
+<span class='transition'>1111 -&gt; XXXX</span>
 </pre>
 </div>
 </body>
