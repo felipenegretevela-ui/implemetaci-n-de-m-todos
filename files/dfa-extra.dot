@@ -1,0 +1,26 @@
+digraph G {
+  rankdir=LR;
+  node [fontname="Helvetica", fontsize=11];
+  edge [arrowsize=0.8, arrowhead=vee];
+
+  qi [shape=point, width=0];
+
+  q00 [shape=circle, style=filled, fillcolor="#E3F2FD", color="#1E88E5"];
+  q10 [shape=circle, style=filled, fillcolor="#F5F5F5", color="#757575"];
+  q01 [shape=circle, style=filled, fillcolor="#F5F5F5", color="#757575"];
+  q11 [shape=doublecircle, style=filled, fillcolor="#DDF7E3", color="#4E9F3D", penwidth=2];
+
+  qi -> q00;
+
+  q00 -> q10 [label="0"];
+  q00 -> q01 [label="1"];
+
+  q10 -> q00 [label="0"];
+  q10 -> q11 [label="1"];
+
+  q01 -> q11 [label="0"];
+  q01 -> q00 [label="1"];
+
+  q11 -> q01 [label="0"];
+  q11 -> q10 [label="1"];
+}

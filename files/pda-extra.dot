@@ -1,0 +1,20 @@
+digraph G {
+  rankdir=LR;
+  node [fontname="Helvetica", fontsize=11];
+  edge [arrowsize=0.8, arrowhead=vee];
+
+  qi [shape=point, width=0];
+
+  start [shape=circle, style=filled, fillcolor="#E3F2FD", color="#1E88E5"];
+  s0 [shape=circle, style=filled, fillcolor="#F5F5F5", color="#757575"];
+  s1 [shape=circle, style=filled, fillcolor="#F5F5F5", color="#757575"];
+  s2 [shape=doublecircle, style=filled, fillcolor="#DDF7E3", color="#4E9F3D", penwidth=2];
+
+  qi -> start;
+
+  start -> s0 [label="epsilon, epsilon -> #"];
+  s0 -> s0 [label="a, # -> a# / a, a -> aa"];
+  s0 -> s1 [label="b, a -> epsilon"];
+  s1 -> s1 [label="b, a -> epsilon"];
+  s1 -> s2 [label="epsilon, # -> #"];
+}

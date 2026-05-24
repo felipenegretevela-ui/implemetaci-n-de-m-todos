@@ -5,50 +5,30 @@
 <meta name='viewport' content='width=device-width, initial-scale=1.0'>
 <title>Máquinas Extra</title>
 <style>
-body { font-family: Courier New, monospace; background:#1f1f1f; color:#f0f0f0; padding:20px; }
+body { font-family: 'Segoe UI', Arial, sans-serif; background:#1f1f1f; color:#f0f0f0; padding:30px; max-width:1100px; margin:auto; }
 h1 { color:#9ADAFB; }
-h2 { color:#F9D949; margin-top:30px; }
-pre { background:#111; padding:15px; border-radius:8px; color:#7CFFB2; }
+h2 { color:#F9D949; margin-top:40px; border-top:1px solid #444; padding-top:25px; }
+h3 { color:#9ADAFB; }
+p { line-height:1.6; color:#dddddd; }
+pre { background:#111; padding:15px; border-radius:8px; color:#7CFFB2; overflow-x:auto; }
+img { background:#ffffff; padding:15px; border-radius:8px; max-width:95%; margin:15px 0; }
+.card { background:#2b2b2b; border:1px solid #444; padding:20px; border-radius:10px; margin-top:15px; }
+.label { color:#F9D949; font-weight:bold; }
 a { color:#9ADAFB; }
 </style>
 </head>
 <body>
 <h1>Máquinas extra implementadas</h1>
-<p>Este archivo muestra la ejecución de las máquinas adicionales agregadas al proyecto.</p>
-<p><a href='automata-highlight.html'>Ver autómata principal generado</a></p>
-<h2>1. PDA - Autómata con pila para a^n b^n</h2>
-<pre>PDA: reconoce a^n b^n
-ab -> rejected
-aabb -> rejected
-aaabbb -> rejected
-aaaabbbb -> rejected
-aaab -> rejected
-bb -> rejected
-a -> rejected
-b -> rejected
-aab -> rejected
-epsilon -> rejected
-</pre>
-<h2>2. Máquina de Turing - Cambia 1 por X</h2>
-<pre>Maquina de Turing: cambia todos los 1 por X
-1 -> X
-11 -> XX
-111 -> XXX
-epsilon -> epsilon
-1111 -> XXXX
-</pre>
-<h2>3. LBA - Autómata linealmente acotado para a^n b^n c^n</h2>
-<pre>LBA: reconoce a^n b^n c^n
-abc -> accepted
-aabbcc -> accepted
-aaabbbccc -> accepted
-aabbc -> rejected
-abbcc -> rejected
-aaabbbcc -> rejected
-abcc -> rejected
-epsilon -> rejected
-</pre>
-<h2>4. AFD extra - Número impar de 0's y número impar de 1's</h2>
+<p>Este archivo muestra las máquinas extra agregadas al proyecto. Cada sección identifica el tipo de máquina, el lenguaje o función que reconoce, una descripción de su funcionamiento, el gráfico generado con Graphviz y las pruebas ejecutadas.</p>
+<p><a href='automata-highlight.html'>Volver al autómata principal</a></p>
+<h2>1. DFA - Autómata Finito Determinista</h2>
+<div class='card'>
+<p><span class='label'>Tipo:</span> DFA, autómata finito determinista.</p>
+<p><span class='label'>Lenguaje:</span> cadenas binarias con número impar de 0's y número impar de 1's.</p>
+<p><span class='label'>Estructura:</span> usa cuatro estados: q00, q10, q01 y q11. Cada estado representa si la cantidad de 0's y 1's leídos es par o impar.</p>
+<p><span class='label'>Funcionamiento:</span> por cada símbolo leído, el autómata cambia de estado dependiendo de si cambia la paridad de los 0's o de los 1's. Acepta únicamente cuando termina en q11.</p>
+<img src='dfa-extra.png' alt='Grafico DFA'>
+<h3>Pruebas</h3>
 <pre>AFD: reconoce cadenas con numero impar de 0's y numero impar de 1's
 01 -> accepted
 10 -> accepted
@@ -61,5 +41,62 @@ epsilon -> rejected
 epsilon -> rejected
 101 -> rejected
 </pre>
+</div>
+<h2>2. PDA - Autómata con Pila</h2>
+<div class='card'>
+<p><span class='label'>Tipo:</span> PDA, autómata con pila.</p>
+<p><span class='label'>Lenguaje:</span> L = { a^n b^n | n >= 1 }.</p>
+<p><span class='label'>Estructura:</span> usa estados start, s0, s1 y s2, además de una pila con símbolo base #.</p>
+<p><span class='label'>Funcionamiento:</span> por cada a leída se apila un símbolo. Al comenzar a leer b, la máquina desapila un símbolo por cada b. Si la cantidad coincide y llega al estado final, acepta.</p>
+<img src='pda-extra.png' alt='Grafico PDA'>
+<h3>Pruebas</h3>
+<pre>PDA: reconoce a^n b^n
+ab -> rejected
+aabb -> rejected
+aaabbb -> rejected
+aaaabbbb -> rejected
+aaab -> rejected
+bb -> rejected
+a -> rejected
+b -> rejected
+aab -> rejected
+epsilon -> rejected
+</pre>
+</div>
+<h2>3. LBA - Autómata Linealmente Acotado</h2>
+<div class='card'>
+<p><span class='label'>Tipo:</span> LBA, autómata linealmente acotado.</p>
+<p><span class='label'>Lenguaje:</span> L = { a^n b^n c^n | n >= 1 }.</p>
+<p><span class='label'>Estructura:</span> usa una cinta limitada al tamaño de la entrada. Marca a como X, b como Y y c como Z.</p>
+<p><span class='label'>Funcionamiento:</span> busca una a, una b y una c para marcarlas como grupo. Repite el proceso hasta que todos los símbolos estén marcados o hasta encontrar un error.</p>
+<img src='lba-extra.png' alt='Grafico LBA'>
+<h3>Pruebas</h3>
+<pre>LBA: reconoce a^n b^n c^n
+abc -> accepted
+aabbcc -> accepted
+aaabbbccc -> accepted
+aabbc -> rejected
+abbcc -> rejected
+aaabbbcc -> rejected
+abcc -> rejected
+epsilon -> rejected
+</pre>
+</div>
+<h2>4. Máquina de Turing</h2>
+<div class='card'>
+<p><span class='label'>Tipo:</span> Máquina de Turing.</p>
+<p><span class='label'>Función:</span> transforma todos los símbolos 1 en X.</p>
+<p><span class='label'>Estructura:</span> usa una cinta, una cabeza de lectura/escritura, un estado inicial q0, un estado final qf y el blanco B.</p>
+<p><span class='label'>Funcionamiento:</span> si lee 1, escribe X y se mueve a la derecha. Si lee B, se detiene en el estado final.</p>
+<img src='turing-extra.png' alt='Grafico Maquina de Turing'>
+<h3>Pruebas</h3>
+<pre>Maquina de Turing: cambia todos los 1 por X
+1 -> X
+11 -> XX
+111 -> XXX
+epsilon -> epsilon
+1111 -> XXXX
+</pre>
+</div>
 </body>
 </html>
