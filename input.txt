@@ -1,24 +1,31 @@
-/* PRUEBA DE NFA CON LECTURA DE VACIO */
+/* PDA CON PILA */
 
 states = q0,q1,q2,q3;
 start = q0;
 finals = q3;
-alphabet = "01";
+alphabet = "iabfBZ";
 
-/* AFN: Cadenas que terminan con la secuencia 01 */
 transitions:
-q0("01") -> q0;
-q0("0") -> q1;
-q1("1") -> q2;
-q2("") -> q3;
+/* 1. Leemos i al inicio y ponemos la base de la pila B */
+q0("i", "") -> q1("B");
+
+/* 2. Leemos a y apilamos Z */
+q1("a", "") -> q1("Z");
+
+/* 3. Leemos la primera b, pasamos a q2 y desapilamos una Z */
+q1("b", "Z") -> q2("");
+
+/* 4. Seguimos leyendo b y desapilando Z */
+q2("b", "Z") -> q2("");
+
+/* 5. Al leer f, exigimos que en el tope de la pila esté B */
+q2("f", "B") -> q3("");
 end
 
-/* Pruebas que deberían ser ACEPTADAS */
-check = "01";
-check = "1101";
-check = "0001";
-
-/* Pruebas que deberían ser RECHAZADAS */
-check = "0";
-check = "10";
-check = "011";
+/* Pruebas de validación */
+check = "iabf";
+check = "iaabbf";
+check = "iaaabbbf";
+check = "iaaabf";
+check = "iabbf";
+check = "ibbaf";
