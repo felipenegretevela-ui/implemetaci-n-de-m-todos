@@ -38,7 +38,7 @@
 
   (define (tokenizer-acc input tokens-table tokens-acc)
     (cond
-      ;---------SI INPUT ES VACIO, DEVOLVER EL ACOMULADOR DE TOKENS-------
+      ;---------SI INPUT ES VACIO, DEVOLVER EL ACUMULADOR DE TOKENS-------
       [(equal? input "")
        tokens-acc]
 
@@ -79,15 +79,14 @@
            (error "Not a recognized token, last token was:" (last-element tokens-acc))
 
            ;---SI NO ES CERO, RECORTAR EL INPUT LA LONGITUD DEL TOKEN
-           (if (or (equal? token-id "commentBlock")
-                   (equal? token-id "commentLine")
-                   (equal? token-id "space"))
-               ;---SI ES COMENTARIO O ESPACIO, NO SE AGREGA A tokens-acc
+           (if (equal? token-id "space")
+               
+               ;---SI ES ESPACIO, NO SE AGREGA A tokens-acc (SE DESCARTA)
                (tokenizer-acc rest-input
                               tokens-table
                               tokens-acc)
-
-               ;---SI ES TOKEN REAL, SE AGREGA AL ACUMULADOR
+               
+               ;---SI ES COMENTARIO O TOKEN REAL, SE AGREGA AL ACUMULADOR
                (tokenizer-acc rest-input
                               tokens-table
                               (append tokens-acc (list new-token)))))]))

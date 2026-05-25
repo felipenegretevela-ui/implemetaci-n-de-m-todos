@@ -1,7 +1,5 @@
 #lang racket
 
-
-
 (provide write-html-file
          build-full-html
          styler
@@ -39,10 +37,12 @@
 
     .text {
       color: #C4947C;
+      text-decoration: none !important;
     }
 
     .comment {
-      color: #73985D;
+      color: #8E8E8E;
+      font-style: italic;
     }
 
     .bracket {
@@ -59,10 +59,12 @@
 
     .quote {
       color: #C4947C;
+      text-decoration: none !important;
     }
 
     .error {
       color: #F44747;
+      text-decoration: none !important;
     }
 
     .accepted {
@@ -164,7 +166,6 @@
     ;-----------ESPACIOS SI EXISTEN EN LA LISTA DE TOKENS------------------
     [(equal? label "space")
      lexeme]
-
     ;-----------CUALQUIER TOKEN NO CONTEMPLADO------------------
     [else
      (string-append "<span class='error'>" lexeme "</span>")]))

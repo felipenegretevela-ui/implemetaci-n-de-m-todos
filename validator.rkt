@@ -1,99 +1,87 @@
 #lang racket
 
-#|
-Habilite la lectura de vacio 
-Elimie la función get-next y la cambie por por get-next-states, para soportar múltiples 
-estados activos a la vez lo cual es la logica del NFA.
-La funcion valida-str es qn realiza la simulación del autómata rastreando una lista completa 
-de states en lugar de un único current state.
-|#
+(provide validate-checks epsilon-closure valida-str valida-pda valida-lba)
 
-
-
-
-(provide validate-checks
-         exists?
-         get-next-states
-         epsilon-closure
-         valida-str)
-
-;------------REVISAR SI UN ELEMENTO EXISTE EN UNA LISTA----------
-(define (exists? lista x)
-  (cond
-    [(empty? lista) #f]
-    [(member x lista) #t]
-    [else #f]))
-
-;------------CALCULAR VACIO----------
+;------------CALCULAR VACIO (NFA)----------
 (define (epsilon-closure auto active-states)
-  (define (closure-worker current-states visited)
-    (define next-epsilon-states
-      (foldl
-       (lambda (state accum)
-         (if (hash-has-key? auto state)
-             (let ([transitions (hash-ref auto state)])
-               (if (hash-has-key? transitions "") ; Busca transiciones vacías
-                   (let ([dest (hash-ref transitions "")])
-                     (define dest-list (if (list? dest) dest (list dest)))
-                     (remove-duplicates (append accum dest-list)))
-                   accum))
-             accum))
-       '()
-       current-states))
-    
-    ;Filtramos los estados que encontramos para no caer en ciclos infinitos
-    (define new-discoveries
-      (filter (lambda (s) (not (member s visited))) next-epsilon-states))
-    
-    (if (empty? new-discoveries)
-        visited ;Si no hay estados nuevos finalizamos
-        (closure-worker new-discoveries (append visited new-discoveries))))
-  
-  (closure-worker active-states active-states))
+  (let loop ([current active-states] [visited active-states])
+    (define next-states
+      (for/fold ([acc '()]) ([state current])
+        (append acc (map first (hash-ref (hash-ref auto state (hash)) "" '())))))
+        
+    (define new-discoveries (filter-not (lambda (s) (member s visited)) (remove-duplicates next-states)))
+    (if (empty? new-discoveries) visited (loop new-discoveries (append visited new-discoveries)))))
 
-;------------OBTENER TODOS LOS ESTADOS SIGUIENTES (NFA)----------
+;-----------GET NEXT STATES (DFA / NFA)----------
 (define (get-next-states auto symbol active-states)
-  (foldl
-   (lambda (state accum)
-     (if (hash-has-key? auto state)
-         (let* ([transitions (hash-ref auto state)])
-           (if (hash-has-key? transitions symbol)
-               (let ([dest (hash-ref transitions symbol)])
-                 (define dest-list (if (list? dest) dest (list dest)))
-                 (remove-duplicates (append accum dest-list)))
-               accum))
-         accum))
-   '()
-   active-states))
+  (remove-duplicates
+   (for/fold ([acc '()]) ([state active-states])
+     (append acc (map first (hash-ref (hash-ref auto state (hash)) symbol '()))))))
 
-;-----------SIMULADOR DE AUTOMATA CON SOPORTE ÉPSILON----------
-(define (valida-str auto cadena active-states finales)
-  ;Aplicamos clausura épsilon antes de evaluar cualquier cosa
-  (define states-after-epsilon (epsilon-closure auto active-states))
-  
+;-----------SIMULADORES----------
+(define (valida-str auto cadena active-states finales tipo)
+  (define states (if (equal? tipo "DFA") active-states (epsilon-closure auto active-states)))
   (cond
-    ;Si la cadena terminó, revisamos si estamos en algún estado final
-    [(equal? cadena "")
-     (ormap (lambda (state) (exists? finales state)) states-after-epsilon)]
-
-    ;Si no nos quedan estados activos, se rechaza
-    [(empty? states-after-epsilon)
-     #f]
-
-    ;Procesamos el siguiente símbolo consumiendo la cadena
+    [(empty? states) #f]
+    [(equal? cadena "") (ormap (lambda (s) (member s finales)) states)]
     [else
-     (define symbol (substring cadena 0 1))
-     (define next-active (get-next-states auto symbol states-after-epsilon))
-     (define remaining-cadena (substring cadena 1))
-     (valida-str auto remaining-cadena next-active finales)]))
+     (define next-active (get-next-states auto (substring cadena 0 1) states))
+     (define strict (if (and (equal? tipo "DFA") (> (length next-active) 1)) '() next-active))
+     (valida-str auto (substring cadena 1) strict finales tipo)]))
 
-;------------VALIDAR TODOS LOS CHECKS DEL AUTOMATA----------
-(define (validate-checks automaton)
-  (define checks (hash-ref automaton "checks"))
-  (define start-state (hash-ref automaton "inicial"))
-  (define final-states (hash-ref automaton "finales"))
+(define (valida-pda auto cadena active-configs finales)
+  (cond
+    [(empty? active-configs) #f]
+    [(equal? cadena "") (ormap (lambda (c) (member (first c) finales)) active-configs)]
+    [else
+     (define sym (substring cadena 0 1))
+     (define next-configs
+       (for/fold ([acc '()]) ([config active-configs])
+         (match config
+           [(list state stack) 
+            (append acc
+                    (filter-map
+                     (match-lambda
+                       [(list to-state pop-s push-s _)
+                        (cond
+                          [(equal? pop-s "") (list to-state (append (string->list push-s) stack))]
+                          [(and (not (empty? stack)) (equal? (first (string->list pop-s)) (first stack)))
+                           (list to-state (append (string->list push-s) (rest stack)))]
+                          [else #f])])
+                     (hash-ref (hash-ref auto state (hash)) sym '())))])))
+     (valida-pda auto (substring cadena 1) next-configs finales)]))
 
-  (map
-   (lambda (check)
-     (list check (valida-str automaton check (list start-state) final-states)))
-   checks))
+(define (valida-lba auto active-configs finales max-steps)
+  (cond
+    [(= max-steps 0) #f]
+    [(empty? active-configs) #f]
+    [(ormap (lambda (c) (member (first c) finales)) active-configs) #t]
+    [else
+     (define next-configs
+       (for/fold ([acc '()]) ([config active-configs])
+         (match config
+           [(list state tape head)
+            (if (or (< head 0) (>= head (length tape)))
+                acc
+                (let ([sym (list-ref tape head)])
+                  (append acc
+                          (for/list ([dest (hash-ref (hash-ref auto state (hash)) sym '())])
+                            (match dest
+                              [(list to-state _ push-s dir-s)
+                               (define write-sym (if (equal? push-s "") sym push-s))
+                               (define new-head (match dir-s ["R" (+ head 1)] ["L" (- head 1)] [_ head]))
+                               (list to-state (list-set tape head write-sym) new-head)])))))])))
+     (valida-lba auto next-configs finales (- max-steps 1))]))
+
+;------------ROUTER MULTI-MÁQUINA----------
+(define (validate-checks automaton tipo)
+  (define start (hash-ref automaton "inicial"))
+  (define finals (hash-ref automaton "finales"))
+  
+  (for/list ([check (hash-ref automaton "checks")])
+    (define res
+      (match tipo
+        ["PDA" (valida-pda automaton check (list (list start '())) finals)]
+        ["LBA" (valida-lba automaton (list (list start (if (equal? check "") '("_") (map string (string->list check))) 0)) finals 1500)]
+        [_     (valida-str automaton check (list start) finals tipo)]))
+    (list check res)))

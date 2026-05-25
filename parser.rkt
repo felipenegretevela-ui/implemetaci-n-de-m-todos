@@ -1,421 +1,142 @@
 #lang racket
 
 (require "automaton.rkt")
-
 (provide parse-start)
 
-#|
-Para el parser nada mas cambie la variable string por text 
-|#
-
 ;------------------DESCENSO RECURSIVO------------------
+(define (current tokens) (car tokens))
+(define (current-label tokens) (caar tokens))
+(define (current-lexeme tokens) (cadar tokens))
+(define (next tokens) (cdr tokens))
 
-;-----------OBTENER TOKEN ACTUAL------------------
-(define (current tokens)
-  (car tokens))
-
-;-----------OBTENER LABEL DEL TOKEN ACTUAL------------------
-(define (current-label tokens)
-  (caar tokens))
-
-;-----------OBTENER LEXEMA DEL TOKEN ACTUAL------------------
-(define (current-lexeme tokens)
-  (cadar tokens))
-
-;-----------AVANZAR AL SIGUIENTE TOKEN------------------
-(define (next tokens)
-  (cdr tokens))
-
-
-
-;-----------HACER MATCH CON EL TOKEN ESPERADO------------------
 (define (match-n-next expected-label tokens)
   (cond
-    [(empty? tokens)
-     (error 'parser
-            "se esperaba ~a, pero se llego al final"
-            expected-label)]
+    [(empty? tokens) (error 'parser "se esperaba ~a, pero se llego al final" expected-label)]
+    [(equal? (current-label tokens) expected-label) (next tokens)]
+    [else (error 'parser "se esperaba ~a, pero se encontro ~a" expected-label (current-label tokens))]))
 
-    [(equal? (current-label tokens) expected-label)
-     (next tokens)]
-
-    [else
-     (error 'parser
-            "se esperaba ~a, pero se encontro ~a"
-            expected-label
-            (current-label tokens))]))
-
-
-
-
-
-;-----------MATCH QUE AVANZA Y TAMBIEN REGRESA EL LEXEMA------------------
 (define (match-n-get expected-label tokens)
   (cond
-    [(empty? tokens)
-     (error 'parser
-            "se esperaba ~a, pero se llego al final"
-            expected-label)]
+    [(empty? tokens) (error 'parser "se esperaba ~a" expected-label)]
+    [(equal? (current-label tokens) expected-label) (list (next tokens) (current-lexeme tokens))]
+    [else (error 'parser "se esperaba ~a" expected-label)]))
 
-    [(equal? (current-label tokens) expected-label)
-     (list (next tokens) (current-lexeme tokens))]
-
-    [else
-     (error 'parser
-            "se esperaba ~a, pero se encontro ~a"
-            expected-label
-            (current-label tokens))]))
-
-;-----------PARSE START------------------
 (define (parse-start tokens)
-  (parse-start-rest
-   (parse-automaton tokens (make-empty-automaton))))
+  (parse-start-rest (parse-automaton tokens (make-empty-automaton))))
 
-;-----------PARSE START REST------------------
 (define (parse-start-rest result)
-  (define tokens-restantes
-    (first result))
-
-  (define auto
-    (second result))
-
+  (define tokens-restantes (first result))
+  (define auto (second result))
   (if (equal? '() tokens-restantes)
       auto
       (error 'parser "tokens sobrantes al final: ~a" tokens-restantes)))
 
-;----------PARSE AUTOMATON----------------
 (define (parse-automaton tokens auto)
-
-  (define result-states
-    (parse-states-section tokens auto))
-  (displayln "result-states")
-  (displayln result-states)
-
-
-  
-  (define result-start
-    (parse-start-section
-     (first result-states)
-     (second result-states)))
-  
-  (displayln "result-start")
-(displayln result-start)
-
-  
-  (define result-finals
-    (parse-finals-section
-     (first result-start)
-     (second result-start)))
-
-  (displayln "result-finals")
-(displayln result-finals)
-
-  
-  (define result-alphabet
-    (parse-alphabet-section
-     (first result-finals)
-     (second result-finals)))
-
-  (displayln "result-alphabet")
-(displayln result-alphabet)
-
-  
-  (define result-transitions
-    (parse-transitions-section
-     (first result-alphabet)
-     (second result-alphabet)))
-
-(displayln "result-transitions")
-(displayln result-transitions)
-  
-  (define result-checks
-    (parse-checks-section
-     (first result-transitions)
-     (second result-transitions)))
-
-
-  (displayln "result-checks")
-(displayln result-checks)
-  
+  (define result-states (parse-states-section tokens auto))
+  (define result-start (parse-start-section (first result-states) (second result-states)))
+  (define result-finals (parse-finals-section (first result-start) (second result-start)))
+  (define result-alphabet (parse-alphabet-section (first result-finals) (second result-finals)))
+  (define result-transitions (parse-transitions-section (first result-alphabet) (second result-alphabet)))
+  (define result-checks (parse-checks-section (first result-transitions) (second result-transitions)))
   result-checks)
 
-;---------PARSE-STATES-SECTION---------
 (define (parse-states-section tokens auto)
-  (define tokens1
-    (match-n-next "kw-states" tokens))
+  (define t1 (match-n-next "kw-states" tokens))
+  (define t2 (match-n-next "equal" t1))
+  (define res (parse-state-list t2))
+  (list (match-n-next "semicolon" (first res)) (auto-add-states auto (second res))))
 
-  (define tokens2
-    (match-n-next "equal" tokens1))
-
-  (define result-states
-    (parse-state-list tokens2))
-
-  (define tokens3
-    (first result-states))
-
-  (define states
-    (second result-states))
-
-  (define tokens4
-    (match-n-next "semicolon" tokens3))
-
-  (list tokens4
-        (auto-add-states auto states)))
-
-;------PARSE-START-SECTION------------
 (define (parse-start-section tokens auto)
-  (define tokens1
-    (match-n-next "kw-start" tokens))
+  (define t1 (match-n-next "kw-start" tokens))
+  (define t2 (match-n-next "equal" t1))
+  (define res (match-n-get "stateId" t2))
+  (list (match-n-next "semicolon" (first res)) (auto-add-start auto (second res))))
 
-  (define tokens2
-    (match-n-next "equal" tokens1))
-
-  (define result-start
-    (match-n-get "stateId" tokens2))
-
-  (define tokens3
-    (first result-start))
-
-  (define start-state
-    (second result-start))
-
-  (define tokens4
-    (match-n-next "semicolon" tokens3))
-
-  (list tokens4
-        (auto-add-start auto start-state)))
-
-;---------PARSE-FINALS-SECTION-----------
 (define (parse-finals-section tokens auto)
-  (define tokens1
-    (match-n-next "kw-finals" tokens))
+  (define t1 (match-n-next "kw-finals" tokens))
+  (define t2 (match-n-next "equal" t1))
+  (define res (parse-state-list t2))
+  (list (match-n-next "semicolon" (first res)) (auto-add-finals auto (second res))))
 
-  (define tokens2
-    (match-n-next "equal" tokens1))
-
-  (define result-finals
-    (parse-state-list tokens2))
-
-  (define tokens3
-    (first result-finals))
-
-  (define finals
-    (second result-finals))
-
-  (define tokens4
-    (match-n-next "semicolon" tokens3))
-
-  (list tokens4
-        (auto-add-finals auto finals)))
-
-;--------PARSE-ALPHABET-SECTION----------
 (define (parse-alphabet-section tokens auto)
-  (define tokens1
-    (match-n-next "kw-alphabet" tokens))
+  (define t1 (match-n-next "kw-alphabet" tokens))
+  (define t2 (match-n-next "equal" t1))
+  (define res (match-n-get "text" t2))
+  (list (match-n-next "semicolon" (first res)) (auto-add-alphabet auto (clean-string (second res)))))
 
-  (define tokens2
-    (match-n-next "equal" tokens1))
- 
-  (define result-alphabet
-    (match-n-get "text" tokens2))
-
-  (define tokens3
-    (first result-alphabet))
-
-  (define alphabet-with-quotes
-    (second result-alphabet))
-
-  (define alphabet
-    (clean-string alphabet-with-quotes))
-
-  (define tokens4
-    (match-n-next "semicolon" tokens3))
-
-  (list tokens4
-        (auto-add-alphabet auto alphabet)))
-
-;-----------PARSE-TRANSITIONS-SECTION----------
 (define (parse-transitions-section tokens auto)
-  (define tokens1
-    (match-n-next "kw-transitions" tokens))
+  (define t1 (match-n-next "kw-transitions" tokens))
+  (define t2 (match-n-next "colon" t1))
+  (define res (parse-transition-list t2 auto))
+  (list (match-n-next "kw-end" (first res)) (second res)))
 
-  (define tokens2
-    (match-n-next "colon" tokens1))
-
-  (define result-transitions
-    (parse-transition-list tokens2 auto))
-
-  (define tokens3
-    (first result-transitions))
-
-  (define auto2
-    (second result-transitions))
-
-  (define tokens4
-    (match-n-next "kw-end" tokens3))
-
-  (list tokens4 auto2))
-
-;--------PARSE-TRANSITION-LIST--------
 (define (parse-transition-list tokens auto)
-  (if (and (not (empty? tokens))
-           (equal? (current-label tokens) "stateId"))
-      (let* ([result-transition
-              (parse-transition tokens auto)]
-
-             [tokens-rest
-              (first result-transition)]
-
-             [new-auto
-              (second result-transition)])
-        (parse-transition-list tokens-rest new-auto))
-
+  (if (and (not (empty? tokens)) (equal? (current-label tokens) "stateId"))
+      (let* ([res (parse-transition tokens auto)])
+        (parse-transition-list (first res) (second res)))
       (list tokens auto)))
 
-;--------PARSE-TRANSITION------------
+;-----------PARSE TRANSITION------------------
 (define (parse-transition tokens auto)
-  (define result-from
-    (match-n-get "stateId" tokens))
-
-  (define tokens1
-    (first result-from))
-
-  (define from-state
-    (second result-from))
-
-  (define tokens2
-    (match-n-next "lparen" tokens1))
-
+  (define res1 (match-n-get "stateId" tokens))
+  (define from-state (second res1))
+  (define t2 (match-n-next "lparen" (first res1)))
   
-  (define result-symbol
-    (match-n-get "text" tokens2)) 
+  (define res3 (match-n-get "text" t2))
+  (define symbol-str (clean-string (second res3)))
+  
+  (define-values (t4 pop-str)
+    (if (equal? (current-label (first res3)) "comma")
+        (let* ([t-comma (match-n-next "comma" (first res3))]
+               [res-pop (match-n-get "text" t-comma)])
+          (values (first res-pop) (clean-string (second res-pop))))
+        (values (first res3) "")))
+        
+  (define t5 (match-n-next "rparen" t4))
+  (define t6 (match-n-next "arrow" t5))
+  
+  (define res7 (match-n-get "stateId" t6))
+  (define to-state (second res7))
+  
+  (define-values (t8 push-str dir-str)
+    (if (equal? (current-label (first res7)) "lparen")
+        (let* ([t-lparen (match-n-next "lparen" (first res7))]
+               [res-push (match-n-get "text" t-lparen)]
+               [t-after-push (first res-push)]
+               [val-push (clean-string (second res-push))])
+          (if (equal? (current-label t-after-push) "comma")
+              (let* ([t-comma2 (match-n-next "comma" t-after-push)]
+                     [res-dir (match-n-get "text" t-comma2)]
+                     [t-after-dir (first res-dir)]
+                     [val-dir (clean-string (second res-dir))])
+                (values (match-n-next "rparen" t-after-dir) val-push val-dir))
+              (values (match-n-next "rparen" t-after-push) val-push "")))
+        (values (first res7) "" "")))
+        
+  (define t9 (match-n-next "semicolon" t8))
+  (list t9 (auto-add-transition auto from-state symbol-str pop-str to-state push-str dir-str)))
 
-  (define tokens3
-    (first result-symbol))
-
-  (define symbol-with-quotes
-    (second result-symbol))
-
-  (define symbol
-    (clean-string symbol-with-quotes))
-
-  (define tokens4
-    (match-n-next "rparen" tokens3))
-
-  (define tokens5
-    (match-n-next "arrow" tokens4))
-
-  (define result-to
-    (match-n-get "stateId" tokens5))
-
-  (define tokens6
-    (first result-to))
-
-  (define to-state
-    (second result-to))
-
-  (define tokens7
-    (match-n-next "semicolon" tokens6))
-
-  (list tokens7
-        (auto-add-transition auto from-state symbol to-state)))
-
-;-----------PARSE CHECKS SECTION------------------
 (define (parse-checks-section tokens auto)
-  (if (and (not (empty? tokens))
-           (equal? (current-label tokens) "kw-check"))
-      (let* ([result-check
-              (parse-check tokens auto)]
-
-             [tokens-rest
-              (first result-check)]
-
-             [new-auto
-              (second result-check)])
-        (parse-checks-section tokens-rest new-auto))
-
+  (if (and (not (empty? tokens)) (equal? (current-label tokens) "kw-check"))
+      (let* ([res (parse-check tokens auto)])
+        (parse-checks-section (first res) (second res)))
       (list tokens auto)))
 
-;-----------PARSE CHECK------------------
 (define (parse-check tokens auto)
-  (define tokens1
-    (match-n-next "kw-check" tokens))
+  (define t1 (match-n-next "kw-check" tokens))
+  (define t2 (match-n-next "equal" t1))
+  (define res (match-n-get "text" t2))
+  (list (match-n-next "semicolon" (first res)) (auto-add-check auto (clean-string (second res)))))
 
-  (define tokens2
-    (match-n-next "equal" tokens1))
-
-    
-  (define result-check
-    (match-n-get "text" tokens2)) 
-
-  (define tokens3
-    (first result-check))
-
-  (define check-with-quotes
-    (second result-check))
-
-  (define check-str
-    (clean-string check-with-quotes))
-
-  (define tokens4
-    (match-n-next "semicolon" tokens3))
-
-  (list tokens4
-        (auto-add-check auto check-str)))
-
-;-----------PARSE STATE LIST------------------
 (define (parse-state-list tokens)
-  (define result-state
-    (match-n-get "stateId" tokens))
+  (define res (match-n-get "stateId" tokens))
+  (define res-tail (parse-state-list-prime (first res)))
+  (list (first res-tail) (cons (second res) (second res-tail))))
 
-  (define tokens1
-    (first result-state))
-
-  (define state
-    (second result-state))
-
-  (define result-tail
-    (parse-state-list-prime tokens1))
-
-  (define tokens2
-    (first result-tail))
-
-  (define more-states
-    (second result-tail))
-
-  (list tokens2
-        (cons state more-states)))
-
-;-----------PARSE STATE LIST PRIME------------------
 (define (parse-state-list-prime tokens)
-  (if (and (not (empty? tokens))
-           (equal? (current-label tokens) "comma"))
-      (let* ([tokens1
-              (match-n-next "comma" tokens)]
-
-             [result-state
-              (match-n-get "stateId" tokens1)]
-
-             [tokens2
-              (first result-state)]
-
-             [state
-              (second result-state)]
-
-             [result-tail
-              (parse-state-list-prime tokens2)]
-
-             [tokens3
-              (first result-tail)]
-
-             [more-states
-              (second result-tail)])
-        (list tokens3
-              (cons state more-states)))
-
+  (if (and (not (empty? tokens)) (equal? (current-label tokens) "comma"))
+      (let* ([t1 (match-n-next "comma" tokens)]
+             [res (match-n-get "stateId" t1)]
+             [res-tail (parse-state-list-prime (first res))])
+        (list (first res-tail) (cons (second res) (second res-tail))))
       (list tokens '())))
-
-
-
-
-
