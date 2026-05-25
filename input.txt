@@ -1,41 +1,19 @@
-states = q0,q1,q2,q3,q4,q5,q6,q7;
+PRUEBA DE ACTIVIDAD 11
+states = q0,q1,q2,q3;
 start = q0;
-finals = q2,q4,q7;
-alphabet = "+-0123456789.eE";
-
+finals = q3;
+alphabet = "axy01234567890-";
+/* Empezamos a definir transiciones */
 transitions:
-q0("+-") -> q1;
-q0("0123456789") -> q2;
-q0(".") -> q3;
-
-q1("0123456789") -> q2;
-q1(".") -> q3;
-
-q2("0123456789") -> q2;
-q2(".") -> q4;
-q2("eE") -> q5;
-
-q3("0123456789") -> q4;
-q4("0123456789") -> q4;
-q4("eE") -> q5;
-q5("+-") -> q6;
-q5("0123456789") -> q7;
-q6("0123456789") -> q7;
-q7("0123456789") -> q7;
-/*automata para numeros enteros, decimales y notacion cientifica*/
+q0 ("axy") -> q1;
+q1 ("axy") -> q1;
+q1 ("-") -> q2;
+q2 ("0123456789") -> q3;
+q3 ("0123456789") -> q3;
 end
-/*automata para numeros enteros, decimales y notacion cientifica*/
-check = "123";
-check = "-45.67";
-check = "+0.123";
-check = ".99";
-check = "12e5";
-check = "3.14E-10";
-check = "-.5E+2";
-check = "+";
-check = ".";
-check = "12e";
-check = "3.14E-";
-check = "abc";
-
-
+check = "axy-012"; /* ACEPTA */
+check = "a-1"; /* ACEPTA */
+check = "xy-999"; /* ACEPTA */
+check = "axy12"; /* RECHAZA */
+check = "-123"; /* RECHAZA */
+check = "axy-"; /* RECHAZA */
