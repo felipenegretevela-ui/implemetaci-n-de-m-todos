@@ -40,118 +40,118 @@ check = "abc";
 
 
 
-PRUEBA DE ACTIVIDAD 11
-states = q0,q1,q2,q3;
-start = q0;
-finals = q3;
-alphabet = "axy01234567890-";
-/* Empezamos a definir transiciones */
-transitions:
-q0 ("axy") -> q1;
-q1 ("axy") -> q1;
-q1 ("-") -> q2;
-q2 ("0123456789") -> q3;
-q3 ("0123456789") -> q3;
-end
-check = "axy-012"; /* Se acepta */
-check = "axy12"; /* NO se acepta */
-check = "a-1"; /* Se acepta */
+// PRUEBA DE ACTIVIDAD 11
+//states = q0,q1,q2,q3;
+//start = q0;
+//finals = q3;
+//alphabet = "axy01234567890-";
+///* Empezamos a definir transiciones */
+//transitions:
+//q0 ("axy") -> q1;
+//q1 ("axy") -> q1;
+//q1 ("-") -> q2;
+//q2 ("0123456789") -> q3;
+//q3 ("0123456789") -> q3;
+//end
+//check = "axy-012"; /* Se acepta */
+//check = "axy12"; /* NO se acepta */
+//check = "a-1"; /* Se acepta */
 
 
-PRUBA DE NFA CON LECTURA DE VACIO 
-states = q0,q1,q2,q3;
-start = q0;
-finals = q3;
-alphabet = "01";
-/* AFN: Cadenas que terminan con la secuencia '01' */
-transitions:
-q0 ("01") -> q0;   
-q0 ("0") -> q1;    
-q1 ("1") -> q2;    
-q2 ("") -> q3;     
-end
-/* Pruebas que deberían ser ACEPTADAS */
-check = "01";
-check = "1101";
-check = "0001";
-/* Pruebas que deberían ser RECHAZADAS */
-check = "0";
-check = "10";
-check = "011";
+//PRUBA DE NFA CON LECTURA DE VACIO 
+//states = q0,q1,q2,q3;
+//start = q0;
+//finals = q3;
+//alphabet = "01";
+///* AFN: Cadenas que terminan con la secuencia '01' */
+//transitions:
+//q0 ("01") -> q0;   
+//q0 ("0") -> q1;    
+//q1 ("1") -> q2;    
+//q2 ("") -> q3;     
+//end
+///* Pruebas que deberían ser ACEPTADAS */
+//check = "01";
+//check = "1101";
+//check = "0001";
+///* Pruebas que deberían ser RECHAZADAS */
+//check = "0";
+//check = "10";
+//check = "011";
 
 
-states = q0, q1, q2, q3;
-start = q0;
-finals = q3;
-alphabet = "iabfBZ";
+//states = q0, q1, q2, q3;
+//start = q0;
+//finals = q3;
+//alphabet = "iabfBZ";
 
-transitions:
-  /* 1. Leemos 'i' al inicio y ponemos la base de la pila 'B' */
-  q0 ("i", "") -> q1 ("B");
+//transitions:
+//  /* 1. Leemos 'i' al inicio y ponemos la base de la pila 'B' */
+//  q0 ("i", "") -> q1 ("B");
   
-  /* 2. Leemos 'a's y apilamos 'Z's */
-  q1 ("a", "") -> q1 ("Z");
+//  /* 2. Leemos 'a's y apilamos 'Z's */
+//  q1 ("a", "") -> q1 ("Z");
   
-  /* 3. Leemos la primera 'b', pasamos a q2 y desapilamos una 'Z' */
-  q1 ("b", "Z") -> q2 ("");
+//  /* 3. Leemos la primera 'b', pasamos a q2 y desapilamos una 'Z' */
+//  q1 ("b", "Z") -> q2 ("");
   
-  /* 4. Seguimos leyendo 'b's y desapilando 'Z's */
-  q2 ("b", "Z") -> q2 ("");
+//  /* 4. Seguimos leyendo 'b's y desapilando 'Z's */
+//  q2 ("b", "Z") -> q2 ("");
   
-  /* 5. Al leer el final 'f', exigimos que en el tope de la pila esté 'B' */
-  q2 ("f", "B") -> q3 ("");
-end
+//  /* 5. Al leer el final 'f', exigimos que en el tope de la pila esté 'B' */
+//  q2 ("f", "B") -> q3 ("");
+//end
 
-/* --- PRUEBAS DE VALIDACIÓN ESTRICTAS --- */
-check = "iabf";      /* ACEPTA (Pila vaciada perfectamente) */
-check = "iaabbf";    /* ACEPTA (Pila vaciada perfectamente) */
-check = "iaaabf";    /* RECHAZA (Sobran 'Z' en la pila) */
-check = "iabbf";     /* RECHAZA (Faltan 'Z', se vacia antes) */
-check = "ibbaf";     /* RECHAZA (Mal orden) */
+///* --- PRUEBAS DE VALIDACIÓN ESTRICTAS --- */
+//check = "iabf";      /* ACEPTA (Pila vaciada perfectamente) */
+//check = "iaabbf";    /* ACEPTA (Pila vaciada perfectamente) */
+//check = "iaaabf";    /* RECHAZA (Sobran 'Z' en la pila) */
+//check = "iabbf";     /* RECHAZA (Faltan 'Z', se vacia antes) */
+//check = "ibbaf";     /* RECHAZA (Mal orden) */
 
 
-states = q0, q1, q2, q3, q4, q5;
-start = q0;
-finals = q5;
-alphabet = "abcXYZ_";
+//states = q0, q1, q2, q3, q4, q5;
+//start = q0;
+//finals = q5;
+//alphabet = "abcXYZ_";
 
-transitions:
-  /* q0: Busca la primera 'a', la tacha con 'X' y se mueve a la Derecha */
-  q0 ("a") -> q1 ("X", "R");
-  /* Si ya no hay 'a's (solo ve 'Y'), verifica que el resto sean puras letras tachadas */
-  q0 ("Y") -> q4 ("Y", "R");
+//transitions:
+///* q0: Busca la primera 'a', la tacha con 'X' y se mueve a la Derecha */
+//q0 ("a") -> q1 ("X", "R");
+///* Si ya no hay 'a's (solo ve 'Y'), verifica que el resto sean puras letras tachadas */
+//q0 ("Y") -> q4 ("Y", "R");
 
-  /* q1: Viaja a la derecha saltando las 'a' e 'Y' hasta encontrar la primera 'b' */
-  q1 ("a") -> q1 ("a", "R");
-  q1 ("Y") -> q1 ("Y", "R");
-  q1 ("b") -> q2 ("Y", "R"); /* Tacha la 'b' con 'Y' */
+///* q1: Viaja a la derecha saltando las 'a' e 'Y' hasta encontrar la primera 'b' */
+//q1 ("a") -> q1 ("a", "R");
+//q1 ("Y") -> q1 ("Y", "R");
+//q1 ("b") -> q2 ("Y", "R"); /* Tacha la 'b' con 'Y' */
 
-  /* q2: Viaja a la derecha saltando las 'b' y 'Z' hasta encontrar la primera 'c' */
-  q2 ("b") -> q2 ("b", "R");
-  q2 ("Z") -> q2 ("Z", "R");
-  q2 ("c") -> q3 ("Z", "L"); /* Tacha la 'c' con 'Z' y empieza a regresar (Left) */
+///* q2: Viaja a la derecha saltando las 'b' y 'Z' hasta encontrar la primera 'c' */
+//q2 ("b") -> q2 ("b", "R");
+//q2 ("Z") -> q2 ("Z", "R");
+//q2 ("c") -> q3 ("Z", "L"); /* Tacha la 'c' con 'Z' y empieza a regresar (Left) */
 
-  /* q3: Viaja hacia atrás (Izquierda) hasta volver a ver la última 'X' */
-  q3 ("Z") -> q3 ("Z", "L");
-  q3 ("b") -> q3 ("b", "L");
-  q3 ("Y") -> q3 ("Y", "L");
-  q3 ("a") -> q3 ("a", "L");
-  q3 ("X") -> q0 ("X", "R"); /* Encontró la 'X', da un paso a la derecha para reiniciar el ciclo */
+///* q3: Viaja hacia atrás (Izquierda) hasta volver a ver la última 'X' */
+//q3 ("Z") -> q3 ("Z", "L");
+//q3 ("b") -> q3 ("b", "L");
+//q3 ("Y") -> q3 ("Y", "L");
+//q3 ("a") -> q3 ("a", "L");
+//q3 ("X") -> q0 ("X", "R"); /* Encontró la 'X', da un paso a la derecha para reiniciar el ciclo */
 
-  /* q4: Fase final. Solo salta las letras tachadas a la derecha */
-  q4 ("Y") -> q4 ("Y", "R");
-  q4 ("Z") -> q4 ("Z", "R");
-  /* Si llegamos al guión bajo (fin de la cinta) sin sobrar letras, ACEPTAMOS */
-  q4 ("_") -> q5 ("_", "R");
-end
+///* q4: Fase final. Solo salta las letras tachadas a la derecha */
+//q4 ("Y") -> q4 ("Y", "R");
+//q4 ("Z") -> q4 ("Z", "R");
+///* Si llegamos al guión bajo (fin de la cinta) sin sobrar letras, ACEPTAMOS */
+//q4 ("_") -> q5 ("_", "R");
+//end
 
-/* --- PRUEBAS (Nota el _ al final como marcador de fin de cinta) --- */
-check = "abc_";       /* ACEPTA (1 de cada) */
-check = "aabbcc_";    /* ACEPTA (2 de cada) */
-check = "aaabbbccc_"; /* ACEPTA (3 de cada) */
-check = "aabbc_";     /* RECHAZA (Falta una c) */
-check = "abbcc_";     /* RECHAZA (Falta una a) */
-check = "abcc_";      /* RECHAZA (Sobra una c) */
+///* --- PRUEBAS (Nota el _ al final como marcador de fin de cinta) --- */
+//check = "abc_";       /* ACEPTA (1 de cada) */
+//check = "aabbcc_";    /* ACEPTA (2 de cada) */
+//check = "aaabbbccc_"; /* ACEPTA (3 de cada) */
+//check = "aabbc_";     /* RECHAZA (Falta una c) */
+//check = "abbcc_";     /* RECHAZA (Falta una a) */
+//check = "abcc_";      /* RECHAZA (Sobra una c) */
 
 
 
