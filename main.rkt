@@ -7,11 +7,7 @@
 (require "graphviz.rkt")
 (require "html-generator.rkt")
 (require "system-utils.rkt")
-(require net/base64 racket/file)
-
-;-----------TIPO DE MAQUINA A PROBAR-------------------
-; Cambiar a "DFA", "NFA", "PDA" o "LBA"
-(define tipo-maquina "DFA")
+(require "web-app.rkt")
 
 ;-----------CREAR CARPETA files SI NO EXISTE-------------------
 (ensure-output-folder)
@@ -24,38 +20,25 @@
 (define tokens
   (tokenizer input tokens-table))
 
-;-----------QUITAR COMENTARIOS PARA EL PARSER-------------------
-(define clean-tokens
-  (filter
-   (lambda (t)
-     (not (or (equal? (first t) "commentBlock")
-              (equal? (first t) "commentLine"))))
-   tokens))
-
 ;-----------PARSEAR Y CONSTRUIR AUTOMATA-------------------
 (define automaton
-  (parse-start clean-tokens))
+  (parse-start tokens))
 
 ;-----------VALIDAR CHECKS-------------------
 (define validations
-  (validate-checks automaton tipo-maquina))
+  (validate-checks automaton))
 
 ;-----------GENERAR GRAFO CON GRAPHVIZ-------------------
-(generate-graphviz automaton output-dot output-png)
-
-;-----------LEER IMAGEN COMO BASE64-------------------
 (define img-base64
-  (bytes->string/utf-8
-   (base64-encode (file->bytes output-png) #"\n")))
+  (generate-graphviz automaton output-dot output-png))
 
 ;-----------GENERAR HTML-------------------
 (write-html-file output-html tokens validations img-base64)
 
 ;-----------CONFIRMACION EN CONSOLA-------------------
-(displayln "Archivo creado: files/automata-highlight.html")
+(displayln "Archivo creado: files/automata-highlight.html (Con gráfico incrustado)")
 (displayln "Archivo creado: files/dfa.dot")
 (displayln "Archivo creado: files/dfa.png")
-(displayln (string-append "Tipo de maquina evaluada: " tipo-maquina))
 
 ;-----------ABRIR HTML GENERADO-------------------
 (sys-show-file output-html)
