@@ -1,19 +1,21 @@
-PRUEBA DE ACTIVIDAD 11
+/* PRUEBA DE ACTIVIDAD 11 */
+
 states = q0,q1,q2,q3;
 start = q0;
 finals = q3;
 alphabet = "axy01234567890-";
-/* Empezamos a definir transiciones */
+
 transitions:
-q0 ("axy") -> q1;
-q1 ("axy") -> q1;
-q1 ("-") -> q2;
-q2 ("0123456789") -> q3;
-q3 ("0123456789") -> q3;
+q0("axy") -> q1;
+q1("axy") -> q1;
+q1("-") -> q2;
+q2("0123456789") -> q3;
+q3("0123456789") -> q3;
 end
-check = "axy-012"; /* ACEPTA */
-check = "a-1"; /* ACEPTA */
-check = "xy-999"; /* ACEPTA */
-check = "axy12"; /* RECHAZA */
-check = "-123"; /* RECHAZA */
-check = "axy-"; /* RECHAZA */
+
+check = "axy-012";
+check = "a-1";
+check = "xy-999";
+check = "axy12";
+check = "-123";
+check = "axy-";
