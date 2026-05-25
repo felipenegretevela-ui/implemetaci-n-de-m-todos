@@ -1,31 +1,46 @@
-/* PDA CON PILA */
+/* LBA CON CINTA LIMITADA */
 
-states = q0,q1,q2,q3;
+states = q0,q1,q2,q3,q4,q5;
 start = q0;
-finals = q3;
-alphabet = "iabfBZ";
+finals = q5;
+alphabet = "abcXYZ_";
 
 transitions:
-/* 1. Leemos i al inicio y ponemos la base de la pila B */
-q0("i", "") -> q1("B");
+/* q0: busca la primera a, la marca con X y se mueve a la derecha */
+q0("a") -> q1("X", "R");
 
-/* 2. Leemos a y apilamos Z */
-q1("a", "") -> q1("Z");
+/* Si ya no hay a, verifica que el resto esté marcado */
+q0("Y") -> q4("Y", "R");
 
-/* 3. Leemos la primera b, pasamos a q2 y desapilamos una Z */
-q1("b", "Z") -> q2("");
+/* q1: viaja a la derecha hasta encontrar la primera b */
+q1("a") -> q1("a", "R");
+q1("Y") -> q1("Y", "R");
+q1("b") -> q2("Y", "R");
 
-/* 4. Seguimos leyendo b y desapilando Z */
-q2("b", "Z") -> q2("");
+/* q2: viaja a la derecha hasta encontrar la primera c */
+q2("b") -> q2("b", "R");
+q2("Z") -> q2("Z", "R");
+q2("c") -> q3("Z", "L");
 
-/* 5. Al leer f, exigimos que en el tope de la pila esté B */
-q2("f", "B") -> q3("");
+/* q3: regresa a la izquierda hasta encontrar X */
+q3("Z") -> q3("Z", "L");
+q3("b") -> q3("b", "L");
+q3("Y") -> q3("Y", "L");
+q3("a") -> q3("a", "L");
+q3("X") -> q0("X", "R");
+
+/* q4: fase final, solo salta letras marcadas */
+q4("Y") -> q4("Y", "R");
+q4("Z") -> q4("Z", "R");
+
+/* Si llega al guion bajo, acepta */
+q4("_") -> q5("_", "R");
 end
 
-/* Pruebas de validación */
-check = "iabf";
-check = "iaabbf";
-check = "iaaabbbf";
-check = "iaaabf";
-check = "iabbf";
-check = "ibbaf";
+/* Pruebas */
+check = "abc_";
+check = "aabbcc_";
+check = "aaabbbccc_";
+check = "aabbc_";
+check = "abbcc_";
+check = "abcc_";
